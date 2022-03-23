@@ -1,0 +1,2613 @@
+openapi: 3.0.3
+info:
+  title: Получение публичной информации о банковских продуктах
+  description: >-
+    Содержит описываются API для Открытых банковских интерфейсов для получения
+    публичной информации о банковских продуктах.
+  version: 1.3.1
+  termsOfService: "https://openbanking.ru/terms"
+  contact:
+    name: Ассоциация развития финансовых технологий (Ассоциация ФинТех)
+    url: "https://fintechru.org"
+    email: info@fintechru.org
+servers:
+  - url: "http://127.0.0.1:8090/open-banking/pdsp/v1.3/"
+    description: Эмулятор Сервера Ресурсов ППУ Песочница 0
+paths:
+  /devices:
+    get:
+      operationId: GetDevices
+      tags:
+        - Devices
+      summary: "Получение списока устройств кредитной организации и банковских платежных агентов (субагентов)"
+      description: Конечная точка позволяет получить подробную информацию об устройствах кредитной организации и банковских платежных агентов (субагентов), включающую их характеристики и местоположение (адрес и геолокация).
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/x-fapi-customer-ip-address"
+        - $ref: "#/components/parameters/If-Modified-Since"
+        - $ref: "#/components/parameters/If-None-Match"
+        - $ref: "#/components/parameters/x-customer-user-agent"
+      responses:
+        200:
+          $ref: "#/components/responses/200GetDevices"
+        400:
+          $ref: "#/components/responses/400Error"
+        404:
+          $ref: "#/components/responses/404Error"
+        500:
+          $ref: "#/components/responses/500Error"
+
+  /branches:
+    get:
+      operationId: GetBranches
+      tags:
+        - Branches
+      summary: "Получение списка отделений кредитных организаций"
+      description: Конечная точка позволяет получить список всех подразделений, принадлежащие кредитной организации.
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/x-fapi-customer-ip-address"
+        - $ref: "#/components/parameters/If-Modified-Since"
+        - $ref: "#/components/parameters/If-None-Match"
+        - $ref: "#/components/parameters/x-customer-user-agent"
+      responses:
+        200:
+          $ref: "#/components/responses/200GetBranches"
+        400:
+          $ref: "#/components/responses/400Error"
+        404:
+          $ref: "#/components/responses/404Error"
+        500:
+          $ref: "#/components/responses/500Error"
+
+components:
+  parameters:
+    x-fapi-auth-date:
+      in: header
+      name: x-fapi-auth-date
+      schema:
+        type: string
+      required: false
+      description: >-
+        Время последнего входа Пользователя в систему с TPP. Значение
+        предоставляется в виде HTTP-date, как в разделе 7.1.1.1 [RFC7231].
+        Например, x-fapi-auth-date: Mon, 26 Aug 2019 12:23:11 GMT
+    x-fapi-customer-ip-address:
+      in: header
+      name: x-fapi-customer-ip-address
+      schema:
+        type: string
+      required: false
+      description: >-
+        IP-адрес Пользователя, если Пользователь в данный момент подключен к
+        Стороннему Поставщику (залогинен в приложении Стороннего Поставщика).
+    Authorization:
+      in: header
+      name: Authorization
+      required: true
+      description: "Токен авторизации согласно https://tools.ietf.org/html/rfc6750"
+      schema:
+        type: string
+    x-customer-user-agent:
+      in: header
+      name: x-customer-user-agent
+      schema:
+        type: string
+      description: >-
+        В заголовке указывается тип устройства (user-agent), который использует
+        Пользователь. Сторонний Поставщик может заполнить это поле значением
+        типа устройства (user-agent), указанным Пользователем. Если Пользователь
+        использует мобильное приложение Стороннего Поставщика, Сторонний
+        Поставщик проверяет, что строка типа устройства (user-agent) отличается
+        от строки типа устройства (user-agent) на основе браузера
+      required: false
+      example: ""
+    product-type:
+      name: product-type
+      in: query
+      required: false
+      description: "Фильтрации по типу продукта"
+      schema:
+        $ref: "#/components/schemas/ProductType"
+    If-Modified-Since:
+      in: header
+      name: x-If-Modified-Since
+      schema:
+        $ref: "#/components/schemas/ISODateTime"
+      required: false
+      description: "Фильтрации по времени модификации. Возвращает только те ресурсы, которые были изменены с указанного времени обращения"
+    If-None-Match:
+      in: header
+      name: If-Modified-Since
+      schema:
+        type: string
+      required: false
+      description: "Фильтрации по идентификатору данных. Возвращает ресурс только в случае если представленное значение Etag не совпадает с текущим"
+    productId:
+      in: path
+      required: true
+      name: productId
+      description: Уникальный идентификатор, присвоенный финансовым  учреждением внутри компании каждому из банковских  продуктов
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 40
+        example: 022eaab4-568b-4635-a5fb-fe91153e6cd6
+    page:
+      name: page
+      in: query
+      required: false
+      description: "Номер страницы"
+      schema:
+        type: integer
+        default: 0
+
+  responses:
+    200GetBanks:
+      description: Запрос успешно выполнен
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BankResponse"
+    200GetDevices:
+      description: Запрос успешно выполнен
+      headers:
+        Etag:
+          description: Уникальный идентификатор, котрый определяет, изменился ли ресурс
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeviceResponse"
+    200GetBranches:
+      description: Запрос успешно выполнен
+      headers:
+        Etag:
+          description: Уникальный идентификатор, котрый определяет, изменился ли ресурс
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BranchesResponse"
+    200ProductsRead:
+      description: Запрос успешно выполнен
+      headers:
+        Etag:
+          description: Уникальный идентификатор, котрый определяет, изменился ли ресурс
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProductsResponse"
+    200ProductListRead:
+      description: Запрос успешно выполнен
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProductListResponse"
+    400Error:
+      description: Запрос имеет не верный формат, отсутствующие или несовместимые тело JSON, параметры URL или поля заголовка
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OBRUErrorResponse"
+    404Error:
+      description: >-
+        1.	СППД пытается получить ресурс, который указан в спецификации, но не реализован на стороне ППД.
+        2.	СППД пытается получить ресурс, который не определен
+
+    500Error:
+      description: Что-то пошло не так на стороне Стороннего поставщика.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OBRUErrorResponse"
+
+  schemas:
+    BankResponse:
+      description: Полезная нагрузка ответа информации о списке кредитных организаций
+      type: object
+      additionalProperties: false
+      properties:
+        Data:
+          description: Раздел данных ответа информации о кредитных организациях
+          $ref: "#/components/schemas/DataBankResponse"
+        Links:
+          description: Раздел для указания ссылок
+          $ref: "#/components/schemas/Links"
+        Meta:
+          description: Раздел метаданных
+          $ref: "#/components/schemas/Meta"
+      required:
+        - Data
+      minProperties: 1
+      maxProperties: 3
+    DeviceResponse:
+      description: Полезная нагрузка ответа запроса об устройствах
+      type: object
+      additionalProperties: false
+      properties:
+        Data:
+          description: Раздел данных ответа информации об устройствах
+          $ref: "#/components/schemas/DataDeviceResponse"
+        Links:
+          description: Раздел для указания ссылок
+          $ref: "#/components/schemas/Links"
+        Meta:
+          description: Раздел метаданных
+          $ref: "#/components/schemas/Meta"
+      required:
+        - Data
+      minProperties: 1
+      maxProperties: 3
+
+    BranchesResponse:
+      description: Полезная нагрузка ответа запроса об отделениях кредитной организации
+      type: object
+      additionalProperties: false
+      properties:
+        Data:
+          description: Раздел данных ответа информации об отделениях кредитной организации
+          $ref: "#/components/schemas/DataBranchesResponse"
+        Links:
+          description: Раздел для указания ссылок
+          $ref: "#/components/schemas/Links"
+        Meta:
+          description: Раздел метаданных
+          $ref: "#/components/schemas/Meta"
+      required:
+        - Data
+      minProperties: 1
+      maxProperties: 3
+
+    DataBranchesResponse:
+      description: Раздел данных ответа информации об отделениях кредитной организации
+      type: object
+      additionalProperties: false
+      properties:
+        Branch:
+          description: Подразделение финансовой организации
+          type: array
+          items:
+            $ref: "#/components/schemas/Branch"
+          minItems: 1
+      required:
+        - Branch
+
+    Branch:
+      description: >-
+        Общая информация о подразделении кредитной организации, его условиях работы, предоставляемых услугах и их характеристиках, а также определении его точного местоположения.
+      type: object
+      additionalProperties: false
+      properties:
+        branchId:
+          description: Уникальный и неизменный идентификатор, используемый для идентификации ресурса branches
+          type: string
+          maxLength: 35
+        name:
+          type: string
+          maxLength: 140
+          description: Наименование отделения
+        wifi:
+          type: boolean
+          description: Наличие Wi-Fi
+        equeue:
+          type: boolean
+          description: Наличие электронной очереди
+        Accessibilities:
+          description: Дополнительные удобства
+          $ref: "#/components/schemas/Accessibilities"
+        Services:
+          description: Услуги отделения кредитной организации
+          $ref: "#/components/schemas/BranchServices"
+        Information:
+          description: Информация о работе подразделения
+          $ref: "#/components/schemas/Information"
+        Address:
+          description: Адрес подразделения
+          $ref: "#/components/schemas/PostalAddressAndLocation"
+      required:
+        - branchId
+        - Address
+
+    SocialNetworks:
+      type: object
+      description: Контакты в социальных сетях
+      additionalProperties: false
+      required:
+        - networkName
+        - url
+      properties:
+        networkName:
+          description: Название социальной сети/мессенджера
+          $ref: "#/components/schemas/SocialNetworkNameCode"
+        url:
+          description: URL-адрес для социальной сети/мессенджера
+          type: string
+          maxLength: 2048
+        description:
+          description: Дополнительная информация в свободной форме
+          type: string
+          maxLength: 255
+    SocialNetworkNameCode:
+      description: Название социальной сети/мессенджера
+      type: string
+      enum:
+        - VK | ВКонтакте
+        - Facebook | Facebook
+        - OK | Одноклассники
+        - Instagram | Instagram
+        - Twitter | Twitter
+        - Messenger | Messenger
+        - iMessage | iMessage
+        - Viber | Viber
+        - WhatsApp | WhatsApp
+        - Telegram | Телеграм
+
+    DataDeviceResponse:
+      description: Раздел данных ответа информации об устройствах
+      type: object
+      additionalProperties: false
+      properties:
+        Device:
+          description: Комплексный объект банкомат или устройство
+          type: array
+          items:
+            $ref: "#/components/schemas/Device"
+          minItems: 0
+    Device:
+      type: object
+      description: >-
+        Общая информация о банкомате или другом устройствае кредитной организации и привлеченных банковских платежных агентов (субагентов) о его условиях работы, предоставляемых услугах и их характеристиках, а также определении его точного местоположения
+      additionalProperties: false
+      required:
+        - deviceId
+        - operationType
+        - deviceType
+        - nfc
+        - qr
+        - baseCurrency
+        - currentStatus
+        - Address
+        - Services
+        - cards
+      properties:
+        deviceId:
+          description: Уникальный и неизменный идентификатор, используемый для идентификации ресурса devices
+          type: string
+          maxLength: 35
+        operationType:
+          description: Буквенные коды видов операций
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/OperationTypeCode"
+          minItems: 1
+        deviceType:
+          description: Тип устройства.
+          $ref: "#/components/schemas/DeviceTypeCode"
+        nfc:
+          description: Использование бесконтактной технологии
+          type: boolean
+        qr:
+          description: Возможность считывания QR-кодов (штрих-кодов) при совершении операций
+          type: boolean
+        recirculation:
+          description: Наличие функции рециркуляции банкнот
+          type: boolean
+        baseCurrency:
+          description: Основная валюта оборудования
+          $ref: "#/components/schemas/ActiveOrHistoricCurrencyCode"
+
+        BanknoteIn:
+          description: "Номинал и валюта купюр при приеме. Если массив пустой, то валюта нет может быть принята"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/Banknote"
+        BanknoteOut:
+          description: "Номинал и валюта купюр при выдаче. Если массив пустой, то валюты нет в наличии"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/Banknote"
+        cards:
+          description: "Платёжные карты, доступные для использования на данном оборудовании"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/CardSchemeNameCode"
+        currentStatus:
+          description: Статус работоспособности оборудования
+          $ref: "#/components/schemas/DeviceCurrentStatusCode"
+        description:
+          type: string
+          maxLength: 255
+          description: Дополнительная информация в свободной форме
+        Services:
+          description: Услуги на оборудовании
+          $ref: "#/components/schemas/Services"
+        Availability:
+          description: Доступность оборудования
+          $ref: "#/components/schemas/Availability"
+        Accessibilities:
+          description: Дополнительные удобства
+          $ref: "#/components/schemas/Accessibilities"
+        PaymentAgent:
+          description: Информация о банковском платежном агенте (субагенте)
+          $ref: "#/components/schemas/PaymentAgent"
+        CurrencyExchange:
+          description: Подробная информация об обмене валюты
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/CurrencyExchange"
+        Address:
+          description: Адрес расположения устройства или банкомата финансовой организаци
+          $ref: "#/components/schemas/PostalAddressAndLocation"
+        ContactDetails:
+          description: Контакты
+          $ref: "#/components/schemas/ContactDetails"
+
+    Banknote:
+      description: Информация о банкнотах
+      type: object
+      additionalProperties: false
+      required:
+        - currency
+      properties:    
+        currency:
+          description: Код валюты
+          $ref: "#/components/schemas/ActiveOrHistoricCurrencyCode"
+        banknoteType:
+          type: string
+          description: "Номинал купюр"
+          
+    PaymentAgent:
+      description: Информация о банковском платежном агенте (субагенте)
+      type: object
+      additionalProperties: false
+      properties:
+        paymentAgentIndicator:
+          description: Признак банковского платежного агента (субагента)
+          $ref: "#/components/schemas/PaymentAgentIndicatorCode"
+        name:
+          description: "Наименование банковского платежного агента (субагента) в соответствии с ЕГРЮЛ или фамилия, имя, отчество (при наличии) банковского платежного агента (субагента) в соответствии с ЕГРИП"
+          type: string
+          maxLength: 255
+          example: Наименование организации
+        Identification:
+          description: Идентификация юридического или физического лица.
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/Identification"
+          minItems: 1
+
+    Identification:
+      description: "Идентификация юридического или физического лица"
+      type: object
+      additionalProperties: false
+      properties:
+        schemeName:
+          description: "Наименование идентификационной схемы юридического или физического лица"
+          $ref: "#/components/schemas/PartyIdentificationCode"
+          example: RU.CBR.TXID
+
+        identification:
+          description: Уникальный и однозначный идентификатор участника, присвоенный идентифицирующей организацией.
+          type: string
+          maxLength: 35
+          example: 7728240240
+      required:
+        - schemeName
+        - identification
+
+    PaymentAgentIndicatorCode:
+      description: Код признака банковского платежного агента (субагента)
+      type: string
+      enum:
+        - БПА | банкомат (касса) банковского платежного агента, привлеченного кредитной организацией;
+        - БПС | банкомат (касса) банковского платежного субагента, привлеченного банковским платежным агентом, привлеченным кредитной организацией
+
+    PartyIdentificationCode:
+      description: "Схема идентификации юридического или физического лица"
+      type: string
+      maxLength: 35
+      enum:
+        - RU.CBR.TXID | Идентификационный номер налогоплательщика (ИНН)
+        - RU.CBR.OGRN | Основной государственный регистрационный номер (ОГРН)
+
+    CurrencyExchange:
+      description: "Подробная информация об обмене валюты"
+      type: object
+      additionalProperties: false
+      properties:
+        exchangeType:
+          description: Тип обмена валют
+          $ref: "#/components/schemas/ExchangeTypeCode"
+        sourceCurrency:
+          description: "Валюта, из которой необходимо конвертировать сумму"
+          $ref: "#/components/schemas/ActiveOrHistoricCurrencyCode"
+        targetCurrency:
+          description: "Валюта, в которую необходимо конвертировать сумму"
+          $ref: "#/components/schemas/ActiveOrHistoricCurrencyCode"
+        scaleCurrency:
+          description: Количество единиц targetCurrency, для которого установлен курс обмена
+          type: integer
+          example: 1
+        exchangeRate:
+          description: "Коэффициент, используемый для перевода суммы из одной валюты в другую. Это отражает цену, по которой одна валюта была куплена за другую валюту"
+          type: number
+          example: 1
+        fee:
+          type: number
+          format: float
+          description: Комиссия за операцию обмена валюты
+        amountMin:
+          type: number
+          format: float
+          description: Минимальная сумма для обмена
+        amountMax:
+          type: number
+          format: float
+          description: Максимальная сумма для обмена
+        direction:
+          description: Направление обмена валюты
+          $ref: "#/components/schemas/CurrencyExchangeDirection"
+        quotationDate:
+          description: "Дата и время обменного курса"
+          $ref: "#/components/schemas/ISODateTime"
+        updateDateTime:
+          description: >-
+            Дата и время на которую устанавливается курс обмена валюты. Значение
+            должно передаваться в формате 'YYYY-MM-DDThh:mm:ss±hh:mm'
+          $ref: "#/components/schemas/ISODateTime"
+      required:
+        - exchangeType
+        - sourceCurrency
+        - targetCurrency
+        - scaleCurrency
+        - exchangeRate
+        - direction
+
+    Geolocation:
+      description: Локация объекта в географических координатах
+      type: object
+      properties:
+        GeographicCoordinates:
+          description: Координаты геолокации
+          $ref: "#/components/schemas/GeographicCoordinates"
+      required:
+        - GeographicCoordinates
+
+    PostalAddressAndLocation:
+      type: object
+      description: Определяет точное местонахождение объекта, принадлежность его к муниципальной территории
+      properties:
+        PostalAddressAndAdmZone:
+          description: Информация о населенном пункте, где продукт доступен либо куда возможна доставка
+          $ref: "#/components/schemas/PostalAddressAndAdmZone"
+        fias:
+          description: >-
+            Уникальный номер адреса объекта адресации (объектов недвижимости: земельного участка, здания 
+            (сооружения или объекта незавершенного строительства), помещения (расположенного в здании или сооружении) 
+            в Государственном адресном реестре федеральной информационной адресной системы (ФИАС). 
+            В случае отсутствия в ФИАС уникального номера адреса объекта адресации (при поиске такого номера для всех адресных элементов) 
+            в поле указывается уникальный номер адресообразующего элемента для последнего элемента улично-дорожной сети.
+            Для стран – участников ЕАЭС поле заполняется значением константы EAEU
+          type: string
+          maxLength: 255
+        Geolocation:
+          description: Локация объекта в географических координатах
+          $ref: "#/components/schemas/Geolocation"
+
+    DataBankResponse:
+      description: "Раздел данных ответа информации о кредитных организациях"
+      type: object
+      additionalProperties: false
+      properties:
+        Bank:
+          description: Комплексный объект кредитной организации
+          type: array
+          items:
+            $ref: "#/components/schemas/Bank"
+          minItems: 0
+    Bank:
+      description: >-
+        Общая информация о кредитной организации, служащая для ее идентификации и позволяющая определить базовые URL
+        для предоставления публичной информации. Используется  в реестре поставщиков публичной информации 
+        Среды Открытых банковских интерфейсов.
+      type: object
+      additionalProperties: false
+      properties:
+        bankId:
+          description: >-
+            Уникальный и неизменный идентификатор, используемый для
+            идентификации ресурса 'banks' (ресурс кредитной организации)
+          type: string
+          maxLength: 35
+        bicfi:
+          description: SWIFT bic
+          $ref: "#/components/schemas/BICFIIdentifier"
+        bic:
+          description: БИК
+          $ref: "#/components/schemas/BIKCode"
+        clearingSystemMemberId:
+          type: string
+          maxLength: 35
+          description: Идентификатор участника в платежной системе.
+        baseUrl:
+          type: string
+          maxLength: 35
+          description: Базовый URL кредитной организации
+        bankName:
+          type: string
+          maxLength: 140
+          description: Наименование кредитной организации.
+        bankNameEng:
+          type: string
+          maxLength: 140
+          description: Наименование кредитной организации на английском языке.
+        shortBankName:
+          type: string
+          maxLength: 35
+          description: Сокращенное наименование кредитной организации.
+        bankDescription:
+          type: string
+          maxLength: 255
+          description: Детальное описание кредитной организации.
+        legalEntityId:
+          type: string
+          maxLength: 20
+          description: Код идентификации юридических лиц LEI.
+        PostalAddress:
+          description: "Адрес финансовой организации, обслуживающая счет получателя средств"
+          $ref: "#/components/schemas/PostalAddress"
+      required:
+        - bankId
+        - baseUrl
+        - bankName
+        - PostalAddress
+
+    Links:
+      description: >-
+        ППУ предоставляет постраничный ответ для операций GET, которые
+        возвращают множественные записи.
+      type: object
+      additionalProperties: false
+      properties:
+        self:
+          type: string
+          format: uri
+        first:
+          type: string
+          format: uri
+        prev:
+          type: string
+          format: uri
+        next:
+          type: string
+          format: uri
+        last:
+          type: string
+          format: uri
+      required:
+        - self
+    Meta:
+      description: >-
+        Раздел Meta обязателен, но может быть пустым. Необязательный элемент -
+        «TotalPages», указывает на количество передаваемых страниц. Если
+        передается более одной страницы, то элемент «TotalPages» обязательно
+        присутствует.
+      type: object
+      additionalProperties: false
+      properties:
+        totalPages:
+          type: integer
+          description: Указывает на количество передаваемых страниц
+    GeographicCoordinates:
+      description: Географические координаты.
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: float
+          description: Широта.
+        longitude:
+          type: number
+          format: float
+          description: Долгота.
+      required:
+        - latitude
+        - longitude
+
+    BICFIIdentifier:
+      description: SWIFT bic
+      type: string
+      pattern: "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}"
+    BIKCode:
+      description: "SWIFT bic, актуальный справочник на сайте Центрального Банка Росии."
+      type: string
+    DeviceTypeCode:
+      description: Тип устройства
+      type: string
+      maxLength: 6
+      enum:
+        - ATM | БК | Банкомат, посредством которого осуществляются операции выдачи наличных денежных средств и (или) безналичные операции с использованием платежных карт (их реквизитов). При этом указанный банкомат может быть также оснащен другими функциями (например, функцией приема наличных денег с использованием и без использования платежных карт (их реквизитов), функцией оплаты товаров (работ, услуг) без использования платежных карт (их реквизитов)
+        - ATMAcceptanceOnly | Банкомат, посредством которого осуществляются только операции по приему наличных денежных средств без использования платежных карт (их реквизитов). При этом указанный банкомат не может быть оснащен другими функциями (например, функцией выдачи (приема) наличных денег с использованием платежных карт (их реквизитов), функцией оплаты товаров (работ, услуг) с использования платежных карт (их реквизитов)
+        - ElectronicTerminalFixed | С | Электронное устройство, работающее в пределах помещения организации торговли и услуг, в котором оно установлено, с применением как проводной, так и беспроводной технологии (стационарный электронный терминал)
+        - ElectronicTerminalMobile | М | Электронное устройство, работающее с применением каналов удаленного соединения, в том числе информационно-телекоммуникационной сети «Интернет», абонентское устройство мобильной связи, оборудованное картридером и специальным мобильным приложением (мобильный (переносной) электронный терминал)
+        - Imprinter | И | Механическое устройство, предназначенное для переноса оттиска рельефных реквизитов платежной карты на документ, составленный на бумажном носителе (импринтер)
+        - Terminal | Т | Автоматическое устройство, посредством которого держатель платежных карт самостоятельно, без участия уполномоченного сотрудника кредитной организации, организации торговли и услуг, может совершать безналичные операции с использованием платежных карт, конструкция которого не предусматривает выдачу (прием) наличных денег (терминал безналичной оплаты)
+        - Cashbox | К | Касса в организации торговли и услуг
+        - CashboxModile | КМ | Мобильная (передвижная) касса
+
+    OperationTypeCode:
+      description: Виды операций
+      type: string
+      maxLength: 6
+      enum:
+        - CashWithdrawal | НВ | Выдача наличных денежных средств
+        - CashAcceptanceGoods | НО | Прием наличных денежных средств в целях оплаты товаров (работ, услуг)
+        - CashAcceptanceOther | НП | Прием наличных денежных средств не в целях оплаты товаров (работ, услуг) (например, погашение кредитов, зачисление на счета физических лиц, увеличение остатка электронных денежных средств)
+        - CashlessPaymentGoods | БО | Безналичная оплата товаров (работ, услуг)
+        - CashlessPaymentOther | БП | Прочие безналичные операции
+
+    DeviceCurrentStatusCode:
+      description: Текущий статус оборудования.
+      type: string
+      enum:
+        - On | Доступно
+        - Off | Недоступно
+        - TempOff | Временно недоступен
+    CardSchemeNameCode:
+      description: Наименование схемы карты
+      type: string
+      enum:
+        - AmericanExpress | Международная платежная система
+        - Diners | Международная платежная система
+        - Discover | Международная платежная система
+        - MasterCard | Международная платежная система
+        - VISA | Международная платежная система
+        - MIR | Российская национальная платежная система
+        - ArCa | Армянская национальная платежная система
+        - BELKART | Белорусская национальная платежная система
+        - ELCART | Киргизская национальная платежная система
+        - JCB | Платежная система Японии
+        - UnionPay | Национальная платежная система Китая
+    ExchangeTypeCode:
+      description: Тип обмена валюты.
+      type: string
+      enum:
+        - Online | Онлайн
+        - Cash | Наличные
+        - Device | Банкомат
+        - Cashless | Безналичный
+    CurrencyExchangeDirection:
+      type: string
+      enum:
+        - Sell | Кредитная организация продает валюту
+        - Buy | Кредитная организация покупает валюту
+      description: Направление обмена валюты.
+    Services:
+      type: object
+      additionalProperties: false
+      description: Услуги на оборудовании
+      properties:
+        Service:
+          description: Услуга, доступная на оборудовании
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/Service"
+      required:
+        - Service
+
+    Service:
+      description: Услуга, доступная на оборудовании
+      type: object
+      additionalProperties: false
+      properties:
+        serviceType:
+          description: Тип услуги. Справочное значение в виде кода
+          $ref: "#/components/schemas/DeviceServiceTypeCode"
+        serviceName:
+          description: Дополнительная информация в свободной форме
+          type: string
+          maxLength: 40
+      required:
+        - serviceType;
+
+    Availability:
+      description: Комплексный тип доступности.
+      type: object
+      properties:
+        access24Hours:
+          type: boolean
+          description: Круглосуточный режим работы
+        isRestricted:
+          type: boolean
+          description: Доступ к объекту ограничен системой пропуска и прочее
+        sameAsOrganization:
+          type: boolean
+          description: >-
+            Режим работы объекта зависит от режима работы другого объекта, в
+            котором описываемый объект расположен
+        description:
+          type: string
+          maxLength: 255
+          description: Дополнительная информация в свободной форме
+        StandardAvailability:
+          description: Стандартная доступность
+          $ref: "#/components/schemas/StandardAvailability"
+        NonStandardAvailability:
+          description: Не стандартная доступность
+          type: array
+          items:
+            $ref: "#/components/schemas/NonStandardAvailability"
+      required:
+        - access24Hours;
+        - isRestricted;
+        - sameAsOrganization;
+        - StandardAvailability;
+    StandardAvailability:
+      description: Стандартная доступность
+      type: object
+      properties:
+        Day:
+          description: Дни и время работы
+          type: array
+          items:
+            $ref: "#/components/schemas/Day"
+      required:
+        - Day;
+    NonStandardAvailability:
+      description: Не стандартная доступность
+      type: object
+      properties:
+        name:
+          description: Наименование праздничного дня. Например, "Рождество", "Новый Год".
+          type: string
+        fromDate:
+          description: Дата начала периода. Значение должно передаваться в формате "YYYY-MM-DD"
+          $ref: "#/components/schemas/ISODateTime"
+        toDate:
+          description: Дата окончания периода. Значение должно передаваться в формате "YYYY-MM-DD"
+          $ref: "#/components/schemas/ISODateTime"
+        description:
+          description: Дополнительная информация в свободной форме
+          type: string
+        Day:
+          description: Дни и время работы
+          type: array
+          items:
+            $ref: "#/components/schemas/Day"
+      required:
+        - name;
+        - Day;
+    BreakTime:
+      type: object
+      description: Информация о перерывах в работе
+      properties:
+        breakFromTime:
+          description: >-
+            Время начала перерыва. Значение должно передаваться в формате
+            "hh:mm:ss±hh:mm"
+          $ref: "#/components/schemas/ISODateTime"
+        breakToTime:
+          description: >-
+            Время окончания перерыва. Значение должно передаваться в формате
+            "hh:mm:ss±hh:mm"
+          $ref: "#/components/schemas/ISODateTime"
+      required:
+        - breakFromTime;
+        - breakToTime;
+    Day:
+      type: object
+      description: Дни и время работы
+      properties:
+        dayCode:
+          description: День недели. Справочное значение.
+          $ref: "#/components/schemas/WeekDayCode"
+        openingTime:
+          description: >-
+            Время начала работы. Значение должно передаваться в формате
+            "hh:mm:ss±hh:mm"
+          $ref: "#/components/schemas/ISODateTime"
+        closingTime:
+          description: >-
+            Время окончания работы. Значение должно передаваться в формате
+            "hh:mm:ss±hh:mm"
+          $ref: "#/components/schemas/ISODateTime"
+        BreakTime:
+          description: Информация о перерывах в работе
+          type: array
+          items:
+            $ref: "#/components/schemas/BreakTime"
+      required:
+        - dayCode;
+        - BreakTime;
+    ContactDetails:
+      description: Контактная информация
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          description: Номер стационарного телефона
+          pattern: '^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$'
+        mobileNumber:
+          type: string
+          description: Номер мобильного телефона
+          pattern: '^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$'
+        emailAddress:
+          type: string
+          description: Адрес электронной почты
+        other:
+          type: string
+          maxLength: 128
+          description: Дополнительный текст в свободном формате
+        SocialNetworks:
+          description: Контакты в социальных сетях
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/SocialNetworks"
+
+    Accessibilities:
+      type: object
+      additionalProperties: false
+      description: Дополнительные удобства.
+      properties:
+        Accessibility:
+          description: Информация о доступности дополнительных удобств для инвалидов
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/Accessibility"
+      required:
+        - Accessibility;
+    Accessibility:
+      type: object
+      properties:
+        type:
+          description: Тип доступности для инвалидов.
+          $ref: "#/components/schemas/AccessibilityCode"
+        description:
+          type: string
+          maxLength: 255
+          description: Дополнительная информация в свободной форме
+      required:
+        - type;
+        - description;
+    Information:
+      type: object
+      description: Информация о работе подразделения
+      properties:
+        segment:
+          type: string
+          description: Сегмент потребителей.
+          $ref: "#/components/schemas/SegmentCode"
+        Availability:
+          description: Комплексный тип доступности.
+          type: object
+          $ref: "#/components/schemas/Availability"
+        ContactDetails:
+          description: Контактная информация
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactDetails"
+      required:
+        - segment
+
+    BranchServices:
+      type: object
+      additionalProperties: false
+      description: Услуги отделения кредитной организации
+      properties:
+        Service:
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/BranchService"
+        CurrencyExchange:
+          description: Подробная информация об обмене валюты
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/CurrencyExchange"
+      required:
+        - Service
+
+    BranchService:
+      description: Услуга отделения кредитной организации
+      type: object
+      properties:
+        serviceId:
+          type: string
+          maxLength: 40
+          description: >-
+            Уникальный и неизменный идентификатор, используемый для
+            идентификации ресурса 'services'
+        type:
+          description: Тип услуги
+          $ref: "#/components/schemas/ServiceTypeCode"
+        name:
+          type: string
+          description: Наименование услуги
+        segment:
+          type: string
+          description: Сегмент потребителей
+          $ref: "#/components/schemas/SegmentCode"
+        dateTime:
+          description: >-
+            Дата и время обновления услуги. Значение должно передаваться в
+            формате "YYYY-MM-DDThh:mm:ss±hh:mm"
+          $ref: "#/components/schemas/ISODateTime"
+        currentStatus:
+          description: Статус доступности услуги. Справочное значение
+          $ref: "#/components/schemas/ServiceCurrentStatusCode"
+        description:
+          description: Дополнительная информация в свободной форме
+          type: string
+        url:
+          description: URL адрес услуги
+          type: string
+      required:
+        - serviceId
+        - type
+        - name
+        - segment
+        - dateTime
+
+    SegmentCode:
+      description: Сегмент клиентов
+      type: string
+      enum:
+        - Business | Юридические лица, индивидуальные предприниматели и лица занимающиеся частной практикой
+        - Individual | Физические лица
+
+    ServiceCurrentStatusCode:
+      description: Статус доступности услуги
+      type: string
+      enum:
+        - Active | Доступно
+        - Inactive  | Недоступно
+        - Archived | Архив
+
+    WeekDayCode:
+      description: Дни недели.
+      type: string
+      enum:
+        - 01 | Понедельник
+        - 02 | Вторник
+        - 03 | Среда
+        - 04 | Четверг
+        - 05 | Пятница
+        - 06 | Суббота
+        - 07 | Воскресенье
+
+    AccessibilityCode:
+      description: Тип оборудования для инвалидов. Справочное значение
+      type: string
+      enum:
+        - Braille | Шрифт Брайля
+        - AudioCashMachine | Голосовое озвучивание
+        - AutomaticDoors | Автоматические двери
+        - WheelchairAccess | Доступность для инвалидных колясок
+        - ExternalRamp | Внешний пандус
+        - InternalRamp | Внутренний пандус
+        - Other | Другие
+
+    ServiceTypeCode:
+      description: Доступные услуги
+      type: string
+      enum:
+        - Loan | Кредит
+        - Deposit | Депозит
+        - Card | Карта
+        - Transfer | Денежный перевод
+        - Jewel | Драгоценности
+        - CurrencyExchange | Обмен валют
+        - DirectDebit | Прямое дебетование
+        - Other | Другая услуга
+
+    DeviceServiceTypeCode:
+      description: Услуги доступные на оборудовании.
+      type: string
+      example: CashWithdrawal
+      enum:
+        - CashWithdrawal | Снятие наличных денежных средств
+        - PINChange | Смена ПИН
+        - PINUnblock | Разблокировка ПИН
+        - PINActivation | Активация ПИН
+        - Balance | Просмотр баланса
+        - MiniStatement | Выписка
+        - BillPayments | Платежи
+        - MobileBankingRegistration | Регистрация мобильного банка
+        - CurrencyExhange | Обмен валют
+        - CashIn | Пополнение наличными денежными средствами
+        - Other | Другие
+
+    ProductType:
+      description: Тип продукта
+      type: string
+      example: loanIndividual
+      enum:
+        - depositIndividual | Депозит физического лица
+        - depositlegalEntity | Депозит юридического лица
+        - CAindividual | Текущий счет физического лица
+        - CALegalEntity | Расчетный счет юридического лица
+        - debitCard | Дебетовая карта
+        - creditCard | Кредитная карта
+        - loanCar | Автокредит
+        - loanIndividual | Кредит физическому лицу
+        - loanLegalEntity | Кредит юридического лица
+        - mortage | Ипотека
+        - investment | Инвестиционный продукт
+        - Other | Другой продукт
+
+    Product:
+      type: object
+      description: >-
+        Общая информация о продукте кредитной организации, его характеристиках, зависимостях от уровней процентных ставок, условиях приобретения. Объект детально определяет, какие могут быть начисления, списания, комиссии и сборы, а также применяемые при этом ограничения для каждого уровня процентных ставок.
+      required:
+        - productId
+        - productName
+        - ProductDetails
+        - productType
+      properties:
+        productId:
+          description: Уникальный идентификатор, присвоенный финансовым учреждением внутри компании каждому из банковских  продуктов
+          type: string
+          minLength: 1
+          maxLength: 40
+          example: 022eaab4-568b-4635-a5fb-fe91153e6cd6
+        productName:
+          description: Название продукта, используемого в маркетинговых целях
+          type: string
+          minLength: 1
+          maxLength: 350
+          example: МойПродукт
+        productType:
+          description: Тип продукта
+          $ref: "#/components/schemas/ProductType"
+        productVersion:
+          description: Версия продукта 
+          type: string
+          pattern: ^[1-9]\d*(\.[1-9]\d*)*$
+        Brand:
+          description: Торговая марка продукта
+          $ref: "#/components/schemas/Brand"
+        ProductDetails:
+          description: Детальное описание информации о продукте
+          $ref: "#/components/schemas/ProductDetails"
+        DebitInterest:
+          description: Подробная информация о процентных ставках для кредитных продуктов
+          $ref: "#/components/schemas/DebitInterest"
+        CreditInterest:
+          description: Подробная информация о процентных ставках для дебетовых продуктов
+          $ref: "#/components/schemas/CreditInterest"
+        Overdraft:
+          description: Подробная информация о процентных ставках по овердрафту
+          $ref: "#/components/schemas/Overdraft"
+        Repayment:
+          description: Информация о погашениях и выплатах по продуктам
+          $ref: "#/components/schemas/Repayment"
+        OtherFeesCharges:
+          description: "Информация о комиссиях и сборах, в том числе по тарифу обслуживания"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/OtherFeesCharges"
+        SupplementaryData:
+          description: Дополнительная информация, которая не может быть записана в структурированных полях и/или любом другом конкретном блоке
+          $ref: "#/components/schemas/SupplementaryData"
+
+    ProductList:
+      type: object
+      description: Сведения о продукте
+      required:
+        - productId
+        - productName
+        - productType
+      properties:
+        productId:
+          description: Уникальный идентификатор, присвоенный финансовым  учреждением внутри компании каждому из банковских  продуктов
+          type: string
+          minLength: 1
+          maxLength: 40
+          example: 022eaab4-568b-4635-a5fb-fe91153e6cd6
+        productName:
+          description: Название продукта, используемого в маркетинговых  целях (с точки зрения клиента)
+          type: string
+          minLength: 1
+          maxLength: 350
+          example: МойПродукт
+        productType:
+          description: Тип продукта
+          $ref: "#/components/schemas/ProductType"
+        Brand:
+          description: Информация о бренде продукта
+          $ref: "#/components/schemas/Brand"
+
+    Brand:
+      description: Торговая марка продукта
+      type: object
+      properties:
+        brandName:
+          description: Наименование собственного брэнда продукта или брэнд организации, который используется для продвижения продукта
+          type: string
+          minLength: 1
+          maxLength: 140
+          example: "МойБанкГрупп"
+        applicationUri:
+          description: URL-адрес для получения информации об условиях приобретения продукта
+          type: string
+          maxLength: 2048
+          example: "https://mybank.ru/products/credit-card/applay"
+      required:
+        - brandName
+        - applicationUri
+
+    ProductsResponse:
+      type: object
+      required:
+        - Data
+      description: Подробная информация о банковском продукте
+      properties:
+        Data:
+          type: object
+          description: Раздел данных для информации о банковском продукте
+          properties:
+            Product:
+              description: Подробная Информация о продукте
+              type: object
+              $ref: "#/components/schemas/Product"
+        Links:
+          description: Раздел для указания ссылок
+          $ref: "#/components/schemas/Links"
+        Meta:
+          description: Раздел метаданных
+          $ref: "#/components/schemas/Meta"
+
+    ProductListResponse:
+      type: object
+      required:
+        - Data
+      description: Список доступных банковских продуктов
+      properties:
+        Data:
+          type: object
+          description: Раздел данных для информации о банковском продукте
+          properties:
+            Products:
+              description: Информация о продуктах, которые доступны для предложений
+              type: array
+              items:
+                type: object
+                $ref: "#/components/schemas/ProductList"
+        Links:
+          description: Раздел для указания ссылок
+          $ref: "#/components/schemas/Links"
+        Meta:
+          description: Раздел метаданных
+          $ref: "#/components/schemas/Meta"
+      additionalProperties: false
+
+    PeriodUnit:
+      description: Единица измерения периода
+      type: string
+      example: Месяц
+      enum:
+        - Hour | Час
+        - Day | День
+        - Week | Неделя
+        - Month | Месяц
+        - Quarter | Квартал
+        - HalfYear | Полугодие
+        - Year | Год
+        - AcademicTerm | Академическая единица
+    ProductDetails:
+      description: Детальное описание информации о продукте
+      type: object
+      properties:
+        active:
+          description: Признак активности продукта
+          type: boolean
+        activeFrom:
+          description: Дата и время начала срока активности продукта
+          $ref: "#/components/schemas/ISODateTime"
+        activeTo:
+          description: Дата и время окончания срока активности продукта
+          $ref: "#/components/schemas/ISODateTime"
+        feeFreeLength:
+          description: Продолжительность бесплатного или рекламного периода
+          type: integer
+          example: 3
+        feeFreeLengthPeriod:
+          description: Единица измерения (дни, недели, месяцы и т. д.) продолжительности периода
+          $ref: "#/components/schemas/PeriodUnit"
+          example: Month
+        productInsurance:
+          description: Обязательность страхования продукта или залогового имущества
+          type: boolean
+          example: true
+        DeliveryRegions:
+          description: Информация о доступности продукта и возможности доставки
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliveryRegions"
+        FeatureAndBenefit:
+          description: Информация об программах и преимуществах продукта или тарифа
+          $ref: "#/components/schemas/FeatureAndBenefit"
+        Eligibility:
+          type: array
+          description: Ограничения на продукт в целом
+          items:
+            type: object
+            $ref: "#/components/schemas/Eligibility"   
+        Insurances:
+          $ref: "#/components/schemas/Insurances"
+          description: Описание бизнес-правил заполнения информации о страховых программах
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+    TierBandMethod:
+      description: Виды процентной ставки.
+      type: string
+      example: Tiered
+      enum:
+        - Floated | Плавающая процентная ставка, подлежит периодическому пересмотру по мере изменения остатка / задолженности
+        - Tiered | Многоуровневая процентная ставка, определяет фиксированное значения процентов для определенного уровня / диапазона остатка / задолженности
+        - Fixed | Фиксированная процентная ставка, подразумевает неизменную на протяжении всего периода соглашения процентную величину
+    InterestCalculationMethod:
+      description: Варианты начисления процентов (капитализация)
+      type: string
+      example: SimpleInterest
+      enum:
+        - SimpleInterest | Простые проценты
+        - Compound | Сложные проценты
+    ActiveCurrencyAndAmountSimpleType:
+      description: Сумма денежных средств
+      type: string
+      pattern: '^\d{1,13}\.\d{2}'
+      example: "200.00"
+    Rate:
+      description: Процентная ставка
+      type: string
+      pattern: '^(-?\d{1,3}){1}(\.\d{1,4}){0,1}$'
+      example: "5"
+    FeeTypeCode:
+      description: Типы комиссии
+      type: string
+      example: transferOfFunds
+      enum:
+        - transferOfFunds | при переводе денежных средств
+        - withdrawingMoneyFromAnATM | во время снятия в банкомате
+        - countingBanknotes | при пересчете купюр
+        - currencyConversion | во время конвертации валют
+        - factoringService | за услугу факторинга
+        - issuingLoans | при выдаче кредитов
+        - earlyRepaymentOfTheLoan | по досрочному погашению
+        - considerationOfAnApplicationForALoan | рассмотрения заявки на получение кредита
+        - consultationsOnMortages | консультации по ипотекам
+        - consultationsOnInvesting | консультации по ивестпродуктам
+        - openingAccount | по открытию счета
+        - smsNotificating | СМС оповещения
+        - сommissionBroker | Вознаграждение Брокера за исполнение Приказов Клиента на фондовом рынке
+        - marginLending | При маржинальном кредитовании и переносе непокрытых позиций Клиента 
+
+    FrequencyType:
+      description: >-
+        Частота применения в периоде времени
+      type: string
+      example: Monthly
+      enum:
+        - Daily | Ежедневно
+        - Weekly | Еженедельно
+        - Monthly | Ежемесячно
+        - Quarterly | Поквартально
+        - Yearly | Ежегодно
+        - PerOccurrence | По возникновению события
+        - Other | Другое
+
+    OtherTypeCode:
+      description: "Другой тип объекта"
+      type: "object"
+      properties:
+        code:
+          description: "Код идентификации объекта или краткое наименование"
+          type: "string"
+          minLength: 0
+          maxLength: 35
+        name:
+          description: "Наименование, асоциировоннае с кодом"
+          type: "string"
+          minLength: 1
+          maxLength: 70
+        description:
+          description: "Описание применения кода"
+          type: "string"
+          minLength: 1
+          maxLength: 350
+      additionalProperties: false
+      required:
+        - "name"
+        - "description"
+
+    FeeChargeDetail:
+      type: object
+      description: Подробная информация о комиссиях, сборах, пени и штрафах
+      required:
+        - feeType
+        - calculationFrequency
+      properties:
+        feeType:
+          description: Тип комиссии
+          $ref: "#/components/schemas/FeeTypeCode"
+        OtherFeeType:
+          description: Другой тип комиссии
+          $ref: "#/components/schemas/OtherTypeCode"
+        feeAmount:
+          description: Сумма комиссии / сбора / пени / штрафа (если  она взимается в виде суммы, а не ставки)
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        feeRate:
+          description: Ставка комиссии
+          $ref: "#/components/schemas/Rate"
+        feeRateType:
+          description: "Тип процентной ставки"
+          $ref: "#/components/schemas/InterestRateType"
+        OtherFeeRateType:
+          description: Другой тип процентной ставки
+          $ref: "#/components/schemas/OtherTypeCode"
+        applicationFrequency:
+          description: Периодичность применения комиссии / сбора / пени / штрафа
+          $ref: "#/components/schemas/FrequencyType"
+        OtherApplicationFrequency:
+          description: Другая периодичность применения комиссии / сбора / пени / штрафа
+          $ref: "#/components/schemas/OtherTypeCode"
+        calculationFrequency:
+          description: Периодичность расчета комиссии / сбора / пени / штрафа
+          $ref: "#/components/schemas/FrequencyType"
+        OtherCalculationFrequency:
+          description: Другая периодичность расчета комиссии / сбора / пени / штрафа
+          $ref: "#/components/schemas/OtherTypeCode"
+        FeeApplicableRange:
+          description: "Диапазон или суммы или ставки,  для которых применяется комиссия / сбор / пени / штраф"
+
+          $ref: "#/components/schemas/FeeApplicableRange"
+
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+
+    FeeChargeCap:
+      type: object
+      description: Подробная информация о любых ограничениях (минимальных / максимальных сборах), которые применяются к конкретной комиссии / сбору / пени / штрафу
+      required:
+        - minMaxType
+      properties:
+        feeType:
+          description: Типы комиссии
+          $ref: "#/components/schemas/FeeTypeCode"
+        minMaxType:
+          description: "Указывает минимальная или максимальная комиссия"
+          type: "string"
+          enum:
+            - "Minimum"
+            - "Maximum"
+        feeCapOccurrence:
+          description: "Комиссия / сборы / пени / штрафы фиксируются в зависимости от количества случаев, а не ограничиваются определенной суммой"
+          type: integer
+        feeCapAmount:
+          description: Сумма ограничения  комиссии / сбора / пени / штрафа
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        cappingPeriod:
+          description: "Период, для которого ограничена комиссия / сбор / пени / штраф"
+          $ref: "#/components/schemas/PeriodUnit"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+
+    InterestFeesCharges:
+      type: object
+      description: "Информация о комиссиях, сборах, пени и штрафах"
+      required:
+        - FeeChargeDetail
+      properties:
+        FeeChargeDetail:
+          description: "Подробная информация о комиссиях, сборах, пени и штрафах"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/FeeChargeDetail"
+        FeeChargeCap:
+          description: Подробная информация о любых ограничениях  (минимальных / максимальных ), которые  применяются к конкретной комиссии / сбору / пени / штрафы
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/FeeChargeCap"
+
+    InterestRateType:
+      description: Типы процентных ставок, кроме базовых годовых, которые финансовые учреждения могут использовать для описания годовой процентной ставки "
+      type: "string"
+      example: INBR
+      enum:
+        - INBR | Процентная ставка, связанная с процентной ставкой ЦБ РФ
+        - INFR | Фиксированная процентная ставка
+        - INGR | Процентная ставка без учета налоговых выплат
+        - INLR | Базовая процентная ставка поставщика кредита
+        - INNE | Процентная ставка с учетом налоговых выплат
+        - INOT | Другой тип процентной ставки
+
+    DebitInterestTierBand:
+      type: object
+      description: Подробная информация о процентной ставке по кредиту
+      required:
+        - tierValueMinimum
+        - AER
+        - tierValueMinTerm
+        - minTermPeriod
+      properties:
+        AER:
+          description: Эффективная годовая процентная ставка
+          $ref: "#/components/schemas/Rate"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        identification:
+          description: Уникальное определение диапазона уровней процентной ставки для кредита
+          type: string
+          minLength: 1
+          maxLength: 35
+          example: "₽1000-₽5000"
+        tierCurrency:
+          description: Валюта уровня
+        tierValueMinimum:
+          description: Минимальная сумма, для которой  применяется уровень процентной ставки
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        tierValueMaximum:
+          description: Максимальная сумма, для которой  применяется уровень процентной ставки
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        tierValueMinTerm:
+          description: Минимальный срок, на которой применяется уровень процентной ставки
+          type: integer
+          example: "1"
+        minTermPeriod:
+          description: "Единица периода (дни, недели, месяцы и т. д.) минимального срока"
+          $ref: "#/components/schemas/PeriodUnit"
+        tierValueMaxTerm:
+          description: Максимальный срок, для которой применяется уровень процентной ставки
+          type: integer
+          example: "10"
+        maxTermPeriod:
+          description: "Единица периода (дни, недели, месяцы и т. д.) максимального срока"
+          $ref: "#/components/schemas/PeriodUnit"
+        interestRate:
+          description: "Процентная ставка поставщика продукта (рекламная ставка для использования на витрине)"
+          $ref: "#/components/schemas/Rate"
+        interestRateType:
+          description: Типы процентных ставок, кроме годовых, которые финансовые учреждения могут использовать для описания годовой процентной ставки, выплачиваемой по кредиту"
+          $ref: "#/components/schemas/InterestRateType"
+        InterestFeesCharges:
+          description: "Информация о комиссиях и сборах"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/InterestFeesCharges"
+
+    DebitInterestTierBandSet:
+      type: object
+      description: Группа уровней или диапазонов процентной ставки для выплат по кредиту
+      required:
+        - tierBandMethod
+        - calculationMethod
+        - DebitInterestTierBand
+      properties:
+        identification:
+          description: Идентификатор группы уровня процентной ставки
+          type: string
+          minLength: 1
+          maxLength: 35
+          example: "01a001"
+        tierBandMethod:
+          description: Виды процентной ставки
+          $ref: "#/components/schemas/TierBandMethod"
+        calculationMethod:
+          description: Варианты начисления процентов (капитализация)
+          $ref: "#/components/schemas/InterestCalculationMethod"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        DebitInterestTierBand:
+          description: Подробная информация о процентной ставке по кредиту
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/DebitInterestTierBand"
+          minItems: 1
+        TierBandSetEligibility:
+          type: array
+          description: Ограничения на группу начисления процентов
+          items:
+            type: object
+            $ref: "#/components/schemas/Eligibility"   
+        InterestFeesCharges:
+          description: "Информация о комиссиях и сборах, которые связаны со всей группой уровня процентной ставки"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/InterestFeesCharges"
+
+    DebitInterest:
+      type: object
+      required:
+        - DebitInterestTierBandSet
+      description: Подробная информация о процентных ставках для кредитных продуктов
+      properties:
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        DebitInterestTierBandSet:
+          description: Группа уровней или диапазонов процентной ставки для выплат по кредиту
+          type: array
+          minItems: 1
+          items:
+            type: object
+            $ref: "#/components/schemas/DebitInterestTierBandSet"
+
+    TypesTransport:
+      description: >-
+        Тип транспортного средства
+      type: string
+      enum:
+        - Car | Легковой автомобиль
+        - Truck | Грузовой автомобиль
+        - Bus | Автобус
+        - Mototechnics | Мототехника
+        - Boats and yachts | Катера и яхты
+        - Snowmobiles | Снегоходы
+        - Other | Другие транспортные стредства
+
+    FeeApplicableRange:
+      type: object
+      description: "Диапазон суммы или ставки,  для которых применяется комиссия / сбор / пени / штраф"
+      properties:
+        minimumAmount:
+          description: >-
+            Минимальная сумма, с которой начисляется комиссия / сбор / пени / штраф (если она
+            выражена в виде суммы)
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        maximumAmount:
+          description: >-
+            Максимальная сумма, на которую начисляется  комиссия (если она
+            выражена в виде суммы)
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        minimumRate:
+          description: >-
+            Минимальная ставка, по которой применяется  комиссия / сбор / пени / штраф (где она
+            выражена в виде ставки)
+          $ref: "#/components/schemas/Rate"
+        maximumRate:
+          description: >-
+            Максимальная ставка, по которой применяется  комиссия / сбор / пени / штраф (где
+            она выражена в виде ставки)
+          $ref: "#/components/schemas/Rate"
+      additionalProperties: false
+
+    OtherFeesCharges:
+      type: object
+      description: "Информация о комиссиях и сборах, в том числе по тарифу обслуживания"
+      required:
+        - FeeChargeDetail
+      properties:
+        tariffName:
+          description: Название тарифа
+          type: string
+          minLength: 1
+          maxLength: 350
+          example: Лучший тариф
+        FeeChargeDetail:
+          description: Подробная информация о комиссиях, сборах, пени и штрафах
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/FeeChargeDetail"
+        FeeChargeCap:
+          description: Подробная информация о любых ограничениях (минимальных / максимальных сборах), которые применяются к конкретной комиссии / сбору / пени / штрафу
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/FeeChargeCap"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+      additionalProperties: false
+    CountryCode:
+      description: Код страны
+      type: string
+      pattern: "^[A-Z]{2,2}"
+      example: RU
+
+    DeliveryRegions:
+      type: object
+      description: Информация о доступности продукта и возможности доставки
+      properties:
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        DeliveryRegionAndAddress:
+          description: Информация о населенном пункте, где продукт доступен либо куда возможна доставка
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/PostalAddressAndAdmZone"
+
+    PostalAddressAndAdmZone:
+      type: object
+      description: Информация о населенном пункте, где продукт доступен либо куда возможна доставка
+      properties:
+        administrationZone:
+          description: Код по Общероссийскому классификатору территорий муниципальных образований ОКТМО
+          type: string
+          maxLength: 11
+          pattern: ^\d{1,11}$
+          example: 45388000
+        PostalAddress:
+          description: Почтовый адрес, содержащий информацию о населенном пункте, где продукт доступен либо куда возможна доставка
+          $ref: "#/components/schemas/PostalAddress"
+
+    SupplementaryData:
+      type: object
+      properties: {}
+      additionalProperties: true
+      description: Дополнительная информация, которая не может быть записана в структурированных полях и/или любом другом конкретном блоке. Представляет собой JSON объект, схема которого согласуется между участниками взаимодействия и публикуется на портале ППД
+
+    TierBandMethodDestination:
+      description: >-
+        Описывает, подлежат ли начисленные проценты зачислению на текущий счет или должны быть начислены на другой банковский счет.
+      type: string
+      enum:
+        - CurrentAccount | на текущий счет
+        - AnotherAccount | на другой счет
+
+    TierBand:
+      type: object
+      description: Подробная информация об уровнях процентной ставки
+      required:
+        - AER
+        - applicationFrequency
+        - tierValueMinimum
+      properties:
+        AER:
+          description: Эффективная годовая процентная ставка
+          $ref: "#/components/schemas/Rate"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        identification:
+          description: Уникальная и однозначная идентификация диапазона уровней процентной ставки
+          type: string
+          minLength: 1
+          maxLength: 35
+          example: "₽1000-₽5000"
+        tierCurrency:
+          description: Валюта уровня
+          $ref: "#/components/schemas/ActiveOrHistoricCurrencyCode"
+        interestRate:
+          description: "Процентная ставка поставщика продукта (рекламная ставка для использования на витрине)"
+          $ref: "#/components/schemas/Rate"
+        tierValueMinimum:
+          description: Минимальная сумма, для которой применяется уровень процентной ставки
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        tierValueMaximum:
+          description: Максимальная сумма, для которой применяется уровень процентной ставки
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+
+        tierPrimaryValueMinimum:
+          description: Минимальная сумма первоначального взноса
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        tierPrimaryValueMaximum:
+          description: Максимальная сумма первоначального взноса
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+
+        tierRemainValueMinimum:
+          description: Минимальная сумма неснижаемого остатка
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+
+        tierValueMinTerm:
+          description: Минимальный срок, на которой применяется уровень процентной ставки
+          type: integer
+          example: "1"
+        minTermPeriod:
+          description: "Единица периода (дни, недели, месяцы и т. д.) минимального срока"
+          $ref: "#/components/schemas/PeriodUnit"
+        tierValueMaxTerm:
+          description: Максимальный срок, для которой применяется уровень процентной ставки
+          type: integer
+          example: "10"
+        maxTermPeriod:
+          description: "Единица периода (дни, недели, месяцы и т. д.) максимального срока"
+          $ref: "#/components/schemas/PeriodUnit"
+
+        applicationFrequency:
+          description: Периодичность (база) применения начисления
+          $ref: "#/components/schemas/FrequencyType"
+        OtherApplicationFrequency:
+          description: Другая периодичность (база) применения начисления
+          $ref: "#/components/schemas/OtherTypeCode"          
+        calculationFrequency:
+          description: Периодичность расчета начисления
+          $ref: "#/components/schemas/FrequencyType"
+        OtherCalculationFrequency:
+          description: Другая периодичность расчета начисления
+          $ref: "#/components/schemas/OtherTypeCode"  
+        InterestFeesCharges:
+          description: "Информация о комиссиях и сборах"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/InterestFeesCharges"
+
+    TierBandSet:
+      type: object
+      description: Группа описания начисления процентов
+      required:
+        - tierBandMethod
+        - destination
+        - TierBand
+      properties:
+        tierBandMethod:
+          description: Виды процентной ставки
+          $ref: "#/components/schemas/TierBandMethod"
+        calculationMethod:
+          description: Варианты начисления процентов
+          $ref: "#/components/schemas/InterestCalculationMethod"
+        OtherCalculationMethod:
+          description: Другие cпособы начисления процентов (например при досрочном прекращении использования продукта)
+          $ref: "#/components/schemas/OtherTypeCode"
+        destination:
+          description: Начисление процентов на текущий или другой банковский счет
+          $ref: "#/components/schemas/TierBandMethodDestination"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        TierBandSetEligibility:
+          type: array
+          description: Ограничения на группу начисления процентов
+          items:
+            type: object
+            $ref: "#/components/schemas/Eligibility"        
+        TierBand:
+          description: Подробная информация об уровнях процентной ставки
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/TierBand"
+          minItems: 1
+
+    CreditInterest:
+      type: object
+      required:
+        - TierBandSet
+      description: Подробная информация о процентных ставках для дебетовых продуктов
+      properties:
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+
+        TierBandSet:
+          description: Группа описания начисления процентов
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/TierBandSet"
+          minItems: 1
+
+    OverdraftType:
+      description: Тип овердрафта
+      type: string
+      enum:
+        - salaryOverdraft | Овердрафт зарплатный
+        - standardOverdraft | Овердрафт стандартный
+        - overdraftInAdvance | Овердрафт авансом
+        - overdraftForCollection | Овердрафт под инкассацию
+        - technicalOverdraft | Овердрафт технический
+        - overdraftForIndividuals | Овердрафт для физических лиц
+        - creditCardOverdraft | Овердрафт по кредитной карте
+        - otherOverdraft | Другой тип овердрафта
+    OverdraftFeeType:
+      description: Комиссии за овердрафт
+      type: string
+      enum:
+        - connectingOverdraft | Подключение овердрафта
+        - extensionOverdraft | Продление овердрафта
+        - unauthorizedOverdraft | Технический (несанкционированный) овердрафт
+
+    OverdraftFeeChargeDetail:
+      type: object
+      description: Подробная информация о комиссиях и сборах
+      required:
+        - feeType
+        - applicationFrequency
+      properties:
+        feeType:
+          description: Тип комиссии
+          $ref: "#/components/schemas/OverdraftFeeType"
+        OtherFeeType:
+          description: Другой тип комиссии
+          $ref: "#/components/schemas/OtherTypeCode"
+        feeAmount:
+          description: Сумма комиссии / сбора / пени / штрафа (если  она взимается в виде суммы, а не ставки)
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        feeRate:
+          description: Ставка комиссии
+          $ref: "#/components/schemas/Rate"
+        feeRateType:
+          description: "Тип процентной ставки"
+          $ref: "#/components/schemas/InterestRateType"
+        OtherFeeRateType:
+          description: Другой тип процентной ставки
+          $ref: "#/components/schemas/OtherTypeCode"
+        applicationFrequency:
+          description: Периодичность применения комиссии комиссии / сбора / пени / штрафа
+          $ref: "#/components/schemas/FrequencyType"
+        OtherApplicationFrequency:
+          description: Другая периодичность применения комиссии / сбора / пени / штрафа
+          $ref: "#/components/schemas/OtherTypeCode"
+        calculationFrequency:
+          description: Периодичность расчета комиссии / сбора / пени / штрафа
+          $ref: "#/components/schemas/FrequencyType"
+        OtherCalculationFrequency:
+          description: Другая периодичность расчета комиссии / сбора / пени / штрафа
+          $ref: "#/components/schemas/OtherTypeCode"
+        incrementalBorrowingAmount:
+          description: Каждая дополнительная сумма заимствования при овердрафте, к которому применяется комиссия за овердрафт
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        negotiableIndicator:
+          description: "Указывает, являются ли комиссии и сборы договорными"
+          type: "boolean"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        FeeChargeCap:
+          description: Подробная информация о любых ограничениях (минимальных / максимальных сборах), которые применяются к конкретной комиссии / сбору / пени / штрафу
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/FeeChargeCap"
+
+    OverdraftFeesCharges:
+      type: object
+      description: Детали комиссии и сборов за овердрафт
+      required:
+        - OverdraftFeeChargeDetail
+      properties:
+        OverdraftFeeChargeCap:
+          description: Подробная информация о любых ограничениях (минимальных / максимальных сборах), которые применяются к конкретной комиссии / сбору / пени / штрафу
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/FeeChargeCap"
+        OverdraftFeeChargeDetail:
+          description: Подробная информация о комиссиях и сборах
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/OverdraftFeeChargeDetail"
+            minItems: 1
+
+    OverdraftTierBand:
+      type: object
+      description: Подробная информация об уровнях процентной ставки по овердрафту
+      required:
+        - tierValueMin
+      properties:
+        EAR:
+          description: Годовая процентная ставкой овердрафта
+          $ref: "#/components/schemas/Rate"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        identification:
+          description: Уникальное и однозначное определение уровня или диапазона процентных ставок
+          type: string
+          minLength: 1
+          maxLength: 35
+          example: "₽1000-₽5000"
+        tierCurrency:
+          description: Валюта уровня
+          $ref: "#/components/schemas/ActiveOrHistoricCurrencyCode"
+        tierValueMin:
+          description: Минимальная сумма овердрафта , для которой применяется уровень процентной ставки
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        tierValueMax:
+          description: Максимальное сумма овердрафта, для которой применяется уровень процентной ставки
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        agreementLengthMin:
+          description: Минимальное значение диапазона соглашения об овердрафте
+          type: integer
+          example: "1"
+        agreementLengthMax:
+          description: Максимальное значение диапазона соглашения об овердрафте
+          type: integer
+          example: "10000"
+        agreementPeriod:
+          description: Единица измерения (дни, недели, месяцы и т. д.) диапазона соглашения об овердрафте
+          $ref: "#/components/schemas/PeriodUnit"
+
+        overdraftInterestChargingCoverage:
+          description: Методология начисления процентов по овердрафту
+          $ref: "#/components/schemas/TierBandMethod"
+        bankGuaranteedIndicator:
+          description: Указывает, гарантированно ли заявленная ставка овердрафта будет предложена заемщику банком, например если это часть государственной программы или может ли ставка варьироваться в зависимости от обстоятельств заявителя
+          type: boolean
+          example: true
+        OverdraftFeesCharges:
+          description: Детали комиссии и сборов за овердрафт
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/OverdraftFeesCharges"
+
+    OverdraftTierBandSet:
+      type: object
+      description: Подробная информация о процентных ставках по овердрафту
+      required:
+        - tierBandMethod
+        - OverdraftTierBand
+      properties:
+        identification:
+          description: Уникальный идентификатор уровня процентных ставок для овердрафта
+          type: string
+          minLength: 1
+          maxLength: 35
+          example: "₽1000-₽5000"
+        tierBandMethod:
+          description: Виды процентной ставки
+          $ref: "#/components/schemas/TierBandMethod"
+        overdraftType:
+          description: Вид овердрафта
+          $ref: "#/components/schemas/OverdraftType"
+        authorisedIndicator:
+          description: Необходимость авторизации | true - требуется авторизовать овердрафт; \n | false - не требуется авторизация.
+          type: boolean
+          example: true
+        bufferAmount:
+          description: >-
+            Предельная сумма, на которую клиент может превысить  свой
+            кредитный лимит без взимания штрафа за  несанкционированный
+            овердрафт
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        OverdraftTierBand:
+          description: Подробная информация об уровнях процентной ставки по овердрафту
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/OverdraftTierBand"
+          minItems: 1
+
+        OverdraftFeesCharges:
+          description: Детали комиссии и сборов за овердрафт
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/OverdraftFeesCharges"
+
+    Overdraft:
+      type: object
+      required:
+        - OverdraftTierBandSet
+      description: Подробная информация о процентных ставках по овердрафту
+      properties:
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        OverdraftTierBandSet:
+          description: Подробная информация о процентных ставках по овердрафту
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/OverdraftTierBandSet"
+
+    EligibilityType:
+      description: тип соответствия - метод, с помощью которого группируются права на участие в целях сравнения
+      title: Type
+      type: string
+      enum:
+        - NewCustomersOnly | Продукт доступен только новым клиентам
+        - MinimumAge | Минимальный возраст для получения продукта
+        - MaximumAge | Максимальный возраст для получения продукта
+        - BusinessOnly | Только для малоо и среднего бизнеса
+        - CreditScoring | Для прошедших кредитных скоринг
+        - ExistingCustomers | Для клиентов кредитной организации
+        - IdAndV | Для идентифицированных клиентов
+        - Mortgage | Клиент должен иметь ипотеку в кредитной организации
+        - NoArrearsOnLoan | Продукт недоступен для клиента, имеющего задолженность по кредиту
+        - NoCustomerInArrears | Продукт недоступен для клиента с какой-либо просроченной задолженностью
+        - Other | Использовать OtherEligibilityType для любых не охваченных критериев соответствия
+        - StartUp | На открытие малого и среднего бизнесо
+        - Turnover | Ограничено по уровню оборота компании
+        - MinimumBalanceAmont | По минимальной сумме остатка
+        - MinimumTotalDebit | По минимальной сумме списания
+        - MinimumTotalCredit | По минимальной сумме начисления
+
+    Eligibility:
+        description: Критерии приемлемости
+        type: object
+        properties:
+          name:
+            description: Наименование, указанное для критериев приемлемости
+            title: Name
+            type: string
+            minLength: 1
+            maxLength: 350
+          description:
+            description: Полное описание критериев приемлемости
+            type: string
+            minLength: 1
+            maxLength: 500
+          type:
+            description: Тип соответствия - метод, с помощью которого группируются права на участие в целях сравнения
+            $ref: "#/components/schemas/EligibilityType"
+          comments:
+            description: Комментарии и описания
+            $ref: "#/components/schemas/Comments"
+          amount:
+            description: Любые критерии приемлемости, требующие указания суммы или числа, например Минимальный возраст.
+            title: Amount
+            type: string
+            pattern: ^(-?\d{1,14}){1}(\.\d{1,4}){0,1}$
+          indicator:
+            description: Любые критерии приемлемости, при которых значение может быть указано истинным или ложным значением. Резидент РФ - правда или ложь
+            title: Indicator
+            type: boolean
+          textual:
+            description: Любые критерии приемлемости с подробным описанием
+            title: Textual
+            type: string
+            minLength: 1
+            maxLength: 500
+          period:
+            description: Период, в течение которого применяются другие критерии приемлемости
+            $ref: "#/components/schemas/PeriodUnit"
+          OtherEligibilityType:
+            description: Другой тип критериев, не включенный в справочное значение
+            $ref: "#/components/schemas/OtherTypeCode"
+        required:
+            - name
+            - type
+        additionalProperties: false
+
+    FeatureAndBenefitItem:
+      type: object
+      description: Характеристики, связанные с программами и преимуществами
+      properties:
+        identification:
+          description: Уникальная идентификация программы или преимущества
+          title: Identification
+          type: string
+          minLength: 1
+          maxLength: 35
+        type:
+          description: Общепринятые типы программам и преимуществ в виде кода (справочные значения определяются ППД и публикуются на его портале)
+          example: EarlySettlement
+          type: string
+          maxLength: 25
+        name:
+          description: Наименование группы программам и преимуществ
+          type: string
+          minLength: 1
+          maxLength: 70
+          example: Возможность досрочного погашения
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        amount:
+          description: Сумма, связанная с программой / преимуществом, если применимо, например Туристическая страховка на сумму 10000 рублей
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+          example: "10000.00"
+        indicator:
+          description: Индикатор true / false для конкретной функции программы / преимущества, например. Беспроцентный период (Да) или (Нет)
+          type: boolean
+        textual:
+          description: Предоставляет текстовую информацию о функции / преимуществах, например Скидка 10% на билеты в кино по вторникам вечером
+          title: Textual
+          type: string
+          minLength: 1
+          maxLength: 500
+          example: Скидка 10% на билеты в кино по вторникам вечером
+        OtherType:
+          description: Другой тип программам и преимуществ, не включенный в справочное значение
+          $ref: "#/components/schemas/OtherTypeCode"          
+        FeatureBenefitEligibility:
+          type: array
+          description: Ограничение на участие в программе и преимуществах
+          items:
+            type: object
+            $ref: "#/components/schemas/Eligibility"
+      additionalProperties: false
+      required:
+        - type
+
+    FeatureAndBenefitGroup:
+      type: object
+      description: "Группа элементов, описывающих программы и преимущества"
+      properties:
+        name:
+          description: Наименование группы программам и преимуществ
+          type: string
+          minLength: 1
+          maxLength: 70
+          example: Возможность досрочного погашения
+        type:
+          description: Общепринятые типы программам и преимуществ в виде кода (справочные значения определяются ППД и публикуются на его портале)
+          example: EarlySettlement
+          type: string
+          maxLength: 25
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        BenefitGroupNominalValue:
+          description: Номинальная стоимость пакета
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        fee:
+          description: Сумма оплаты, которая взимается с клиента за пакет програм / преимуществ с учетом скидок
+          $ref: "#/components/schemas/ActiveCurrencyAndAmountSimpleType"
+        applicationFrequency:
+          description: Периодичность применения оплаты за пакет програм / преимуществ
+          $ref: "#/components/schemas/FrequencyType"
+        OtherApplicationFrequency:
+          description: Другая периодичность применения оплаты за пакет програм / преимуществ
+          $ref: "#/components/schemas/OtherTypeCode"
+        calculationFrequency:
+          description: Периодичность расчета комиссии оплаты за пакет програм / преимуществ
+          $ref: "#/components/schemas/FrequencyType"
+        OtherCalculationFrequency:
+          description: Другая периодичность расчета оплаты за пакет програм / преимуществ
+          $ref: "#/components/schemas/OtherTypeCode"
+        OtherType:
+          description: Другой тип программам и преимуществ, не включенный в сравочное значение
+          $ref: "#/components/schemas/OtherTypeCode"
+        FeatureAndBenefitItem:
+          type: array
+          description: Характеристики, связанные с программами и преимуществами
+          items:
+            type: object
+            $ref: "#/components/schemas/FeatureAndBenefitItem"
+        FeatureBenefitEligibility:
+          type: array
+          description: Ограничение на участие в программе и преимуществах
+          items:
+            type: object
+            $ref: "#/components/schemas/Eligibility"
+      additionalProperties: false
+      required:
+        - "name"
+
+    FeatureAndBenefit:
+      type: object
+      description: Информация об программах и преимуществах продукта или тарифа
+      properties:
+        FeatureAndBenefitGroup:
+          description: "Группа элементов, описывающих программы и преимущества"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/FeatureAndBenefitGroup"
+        FeatureAndBenefitItem:
+          type: array
+          description: Характеристики, связанные с программами и преимуществами
+          items:
+            type: object
+            $ref: "#/components/schemas/FeatureAndBenefitItem"
+
+    RepaymentTypeCode:
+      description: Схема погашения кредитного продукта (Аннуитет, Платежи равными долями, Дифференцированный платеж)
+      type: string
+      enum:
+        - FixedCapitalFullyAmortising | Фиксированная сумма платежа, полностью выплачивающая переменное разделение капитала и процентов до даты погашения.
+        - Balloon | Погашение, при котором только часть основного остатка по кредитам амортизируется в течение срока, оставшийся остаток подлежит погашению в конце срока
+        - Bullet | Погашение, при котором вся сумма кредита выплачивается при наступлении срока погашения
+        - CapitalAndInterest | Погашение капитала и процентов, при котором кредит полностью амортизируется в течение срока платежа
+        - CustomSchedule | Погашение определяется пользователем в индивидуальные сроки и не обязательно является периодическим
+        - EarlyRepayment | Досрочное погашение полной суммы кредита до согласованного срока погашения
+        - FixedCapitalWithBullet | Фиксированная сумма платежа с переменным разделением капитала и процентов с последним погашением остатка в конце.
+        - FixedCapitalAndInterestReducingBalance | Фиксированная сумма платежа с разделением капитала и процентов в определенное время. В конце может остаться сумма для погашения.
+        - InterestOnly | Переменная сумма платежа с выплатой процентов только по кредиту с последним погашением в конце.
+        - Other	| Другой тип погашения
+        - PrepaymentFee | Переплата или возврат
+        - RepaymentWithBullet | Периодическое погашение с выплатой комбинации капитала и процентов с последним погашением в конце.
+        - StraightLineInterestOnly | Переменная сумма платежа, выплачивающая фиксированную процентную ставку по ссудес последним погашением в конце.
+    AmountTypeCode:
+      description: Схема погашения кредитного продукта (Аннуитет, Платежи равными долями, Дифференцированный платеж)
+      type: string
+      enum:
+        - Balloon	| Погашение по графику единовременных выплат в определенный момент срока
+        - BalanceToDate | Весь оставшийся остаток по кредиту, включая проценты, комиссионные и сборы
+        - CapitalAndInterest	| Погашение включает капитал, проценты и комиссионные сборы
+        - FeeChargeCap	| Погашение включает только комиссии и сборы
+        - InterestOnly	| Погашение включает проценты и комиссионные сборы
+        - Bullet	| Погашение по концу срока
+        - Other	| Другой тип погашения
+    Repayment:
+      type: object
+      description: Информация о погашениях и выплатах по продуктам
+      properties:
+        repaymentType:
+          description: Схема погашения кредитного продукта (Аннуитет, Платежи равными долями, Дифференцированный платеж)
+          $ref: "#/components/schemas/RepaymentTypeCode"
+          exaple: "FixedCapitalFullyAmortising"
+        comments:
+          description: Комментарии и описания
+          $ref: "#/components/schemas/Comments"
+        repaymentFrequency:
+          description: Частота погашения
+          $ref: "#/components/schemas/FrequencyType"
+        amountType:
+          description: Тип выплаты. (Погашение предназначено для выплаты только процентов или и процентов, и капитала, или общей суммы, или остатка на сегодняшний день и т.д.)
+          $ref: "#/components/schemas/AmountTypeCode"
+          example: "Balloon"
+
+        PaymentDate:
+          $ref: "#/components/schemas/PaymentDate"
+          description: Информация о дате платежа
+        OtherRepaymentType:
+          type: "object"
+          description: "Другой тип погашения с описанием"
+          $ref: "#/components/schemas/OtherTypeCode"
+
+        OtherRepaymentFrequency:
+          type: "object"
+          description: "Другая частота погашения с описанием"
+          $ref: "#/components/schemas/OtherTypeCode"
+
+        OtherAmountType:
+          type: "object"
+          description: "Другой тип выплаты с описанием"
+          $ref: "#/components/schemas/OtherTypeCode"
+
+        RepaymentFeeCharges:
+          description: "Применимая комиссия / сборы за погашение, такие как предоплата, полное досрочное погашение или невыплата"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/InterestFeesCharges"
+
+        RepaymentFeeChargeDetail:
+          description: "Подробная информация о комиссиях, сборах, пени и штрафах"
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/FeeChargeDetail"
+          required:
+            - "RepaymentFeeChargeDetail"
+
+    OBRUErrorResponseErrorCode:
+      description: Низкоуровневое текстовое описание ошибки
+      type: string
+      x-namespaced-enum:
+        - RU.SBRF.Field.Expected
+        - RU.SBRF.Field.Invalid
+        - RU.SBRF.Field.InvalidDate
+        - RU.SBRF.Field.Missing
+        - RU.SBRF.Field.Unexpected
+        - RU.SBRF.Header.Invalid
+        - RU.SBRF.Header.Missing
+        - RU.SBRF.Reauthenticate
+        - RU.SBRF.Resource.InvalidFormat
+        - RU.SBRF.Resource.NotFound
+        - RU.SBRF.Rules.DuplicateReference
+        - RU.SBRF.Signature.Invalid
+        - RU.SBRF.Signature.InvalidClaim
+        - RU.SBRF.Signature.Malformed
+        - RU.SBRF.Signature.Missing
+        - RU.SBRF.Signature.MissingClaim
+        - RU.SBRF.Signature.Unexpected
+        - RU.SBRF.Unsupported.Currency
+        - RU.SBRF.Unsupported.Frequency
+    OBRUError:
+      description: Контейнер с ошибкой
+      type: object
+      additionalProperties: false
+      properties:
+        errorCode:
+          $ref: "#/components/schemas/OBRUErrorResponseErrorCode"
+        message:
+          type: string
+          maxLength: 500
+          description: "Описание ошибки. Например, 'Обязательное поле не указано'."
+        path:
+          type: string
+          maxLength: 500
+          description: >-
+            Путь к элементу с ошибкой в JSON объекте. Рекомендуемое, но не
+            обязательное поле.
+        url:
+          type: string
+          format: uri
+          description: >-
+            URL для помощи в устранении проблемы, Также через URL можно
+            предоставлять дополнительную информацию.
+      required:
+        - errorCode
+        - message
+    OBRUErrorResponse:
+      description: Контейнер с детализацией ошибки
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          minLength: 1
+          maxLength: 40
+          description: "Высокоуровневый текстовый код ошибки, необходимый для классификации"
+        id:
+          type: string
+          minLength: 1
+          maxLength: 40
+          description: >-
+            Уникальный идентификатор ошибки, для целей аудита, в случае
+            неизвестных / не классифицированных ошибок.
+        message:
+          minLength: 1
+          maxLength: 500
+          description: >-
+            Краткое сообщение об ошибке. Например, «что-то не так с
+            предоставленными параметрами запроса».
+        Errors:
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/OBRUError"
+          minItems: 1
+      required:
+        - code
+        - message
+        - Errors
+
+    PostalAddress:
+      description: "Почтовый адрес"
+      type: object
+      additionalProperties: false
+      properties:
+        addressType:
+          description: "Тип адреса"
+          $ref: "#/components/schemas/AddressTypeCode"
+          example: DeliveryTo
+        addressLine:
+          description: "Строка адреса"
+          type: array
+          items:
+            type: string
+            maxLength: 70
+          minItems: 0
+          maxItems: 2
+
+        streetName:
+          description: "Наименование улицы или проспекта"
+          type: string
+          maxLength: 70
+          example: "Садовая"
+        buildingNumber:
+          description: "Номер, который определяет положение здания на улице"
+          type: string
+          maxLength: 16
+          example: "11"
+        postCode:
+          description: "Почтовый индекс"
+          type: string
+          maxLength: 16
+          example: "0100010"
+        townName:
+          description: "Наименование населённого пункта или территории, находящейся вне границ поселений"
+          type: string
+          maxLength: 35
+          example: Бигсити
+        countrySubDivision:
+          description: "Наименование и тип субъекта Российской Федерации"
+          type: string
+          maxLength: 35
+          example: Мой край
+        country:
+          description: "Название страны в кодированной форме"
+          $ref: "#/components/schemas/CountryCode"
+          example: RU
+    AddressTypeCode:
+      description: "Тип адреса"
+      type: string
+      example: DeliveryTo
+      enum:
+        - Business | Рабочий адрес
+        - Correspondence | Адрес для корреспонденции
+        - DeliveryTo | Адрес доставки
+        - MailTo | Почтовый ящик
+        - POBox | Абонентский ящик
+        - Postal | Почтовый адрес
+        - Residential | Адрес проживания
+        - Statement | Адрес пребывания
+    ISODateTime:
+      description: Формат даты и времени
+      type: string
+      format: date-time
+      example: "2021-06-05T15:15:13+00:00"
+
+    ActiveOrHistoricCurrencyCode:
+      description: "Код валюты, соответствующий международного стандарта ISO 4217"
+      type: string
+      pattern: "^[A-Z]{3,3}"
+      example: RUB
+
+    Insurances:
+      type: object
+      description: Список страховых программах
+      properties:
+        Insurance:
+          description: Описание бизнес-правил заполнения информации о страховых программах для оформления кредита
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/Insurance"
+    Insurance:
+      type: object
+      description: Описание бизнес-правил заполнения информации о страховой программе для оформления продукта
+      properties:
+        insuranceId:
+          type: string
+          description: Идентификатор страховой программы
+          example: INS-01
+        insuranceName:
+          type: string
+          description: Наименование страховой программы
+          example: "Страхование жизни и здоровья"
+        comments:
+          $ref: "#/components/schemas/Comments"
+          description: "Комментарии, дополнительная информация о страховых программах"
+        companyName:
+          type: string
+          description: Название компании, предоставляющей услуги по страхованию
+          example: "МоеСтрахование"
+        amountRate:
+          $ref: "#/components/schemas/Rate"
+          description: Стоимость страховки в процентах от общей суммы продукта
+          example: "3.12"
+        agreementURL:
+          type: string
+          description: Ссылка на информацию с условиями страховой программы
+          example: "https://insurance.myprovider.ru/life"
+        riskComments:
+          $ref: "#/components/schemas/Comments"
+          description: "Список основных рисков, которые входят в страховую программу. Например, потеря работы, больничный лист более 3 месяцев"
+
+      required:
+        - insuranceName
+        - companyName
+
+    PaymentDate:
+      type: object
+      description: Информация о возможности выбора клиентом даты платежа
+      properties:
+        customerChoice:
+          type: boolean
+          description: "Возможность выбрать дату платежа | FALSE – дата платежа назначается организацией;\n TRUE – дату платежа выбирает клиент"
+        comments:
+          $ref: "#/components/schemas/Comments"
+          description: "Комментарии, дополнительная информация о возможности выбора клиентом даты платежа     Каждый комментарий должен быть передан в отдельной сущности массива для корректного отображения     в интерфейсе.     Например, Выбор даты платежа за дополнительную плату"
+
+
+    Comments:
+      description: Комментарии и описания основных сведений о разделе
+      type: array
+      items:
+        type: string
+        maxLength: 255
+        example: Информация для клиента
+
+
