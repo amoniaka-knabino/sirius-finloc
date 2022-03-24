@@ -1,0 +1,4259 @@
+openapi: 3.0.3
+info:
+  title: Получение публичной информации о банковских продуктах
+  description: Содержит описываются API для Открытых банковских интерфейсов для получения
+    публичной информации о банковских продуктах.
+  termsOfService: https://openbanking.ru/terms
+  contact:
+    name: Ассоциация развития финансовых технологий (Ассоциация ФинТех)
+    url: https://fintechru.org
+    email: info@fintechru.org
+  version: 1.3.1
+paths:
+  /devices:
+    get:
+      tags:
+      - Devices
+      summary: Получение списока устройств кредитной организации и банковских платежных
+        агентов (субагентов)
+      description: "Конечная точка позволяет получить подробную информацию об устр\
+        ойствах кредитной организации и банковских платежных агентов (субагентов),\
+        \ включающую их характеристики и местоположение (адрес и геолокация)."
+      operationId: getDevices
+      parameters:
+      - name: page
+        in: query
+        description: Номер страницы
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: x-fapi-customer-ip-address
+        in: header
+        description: "IP-адрес Пользователя, если Пользователь в данный момент под\
+          ключен к Стороннему Поставщику (залогинен в приложении Стороннего Постав\
+          щика)."
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: x-If-Modified-Since
+        in: header
+        description: "Фильтрации по времени модификации. Возвращает только те ресу\
+          рсы, которые были изменены с указанного времени обращения"
+        required: false
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/ISODateTime'
+      - name: If-Modified-Since
+        in: header
+        description: Фильтрации по идентификатору данных. Возвращает ресурс только
+          в случае если представленное значение Etag не совпадает с текущим
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: x-customer-user-agent
+        in: header
+        description: "В заголовке указывается тип устройства (user-agent), который\
+          \ использует Пользователь. Сторонний Поставщик может заполнить это поле\
+          \ значением типа устройства (user-agent), указанным Пользователем. Если\
+          \ Пользователь использует мобильное приложение Стороннего Поставщика, Ст\
+          оронний Поставщик проверяет, что строка типа устройства (user-agent) отл\
+          ичается от строки типа устройства (user-agent) на основе браузера"
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: ""
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          headers:
+            Etag:
+              description: "Уникальный идентификатор, котрый определяет, изменился\
+                \ ли ресурс"
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        "400":
+          description: "Запрос имеет не верный формат, отсутствующие или несовмест\
+            имые тело JSON, параметры URL или поля заголовка"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OBRUErrorResponse'
+        "404":
+          description: "1.\tСППД пытается получить ресурс, который указан в специф\
+            икации, но не реализован на стороне ППД. 2.\tСППД пытается получить ре\
+            сурс, который не определен"
+        "500":
+          description: Что-то пошло не так на стороне Стороннего поставщика.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OBRUErrorResponse'
+      x-swagger-router-controller: Devices
+  /branches:
+    get:
+      tags:
+      - Branches
+      summary: Получение списка отделений кредитных организаций
+      description: "Конечная точка позволяет получить список всех подразделений, п\
+        ринадлежащие кредитной организации."
+      operationId: getBranches
+      parameters:
+      - name: page
+        in: query
+        description: Номер страницы
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: x-fapi-customer-ip-address
+        in: header
+        description: "IP-адрес Пользователя, если Пользователь в данный момент под\
+          ключен к Стороннему Поставщику (залогинен в приложении Стороннего Постав\
+          щика)."
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: x-If-Modified-Since
+        in: header
+        description: "Фильтрации по времени модификации. Возвращает только те ресу\
+          рсы, которые были изменены с указанного времени обращения"
+        required: false
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/ISODateTime'
+      - name: If-Modified-Since
+        in: header
+        description: Фильтрации по идентификатору данных. Возвращает ресурс только
+          в случае если представленное значение Etag не совпадает с текущим
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: x-customer-user-agent
+        in: header
+        description: "В заголовке указывается тип устройства (user-agent), который\
+          \ использует Пользователь. Сторонний Поставщик может заполнить это поле\
+          \ значением типа устройства (user-agent), указанным Пользователем. Если\
+          \ Пользователь использует мобильное приложение Стороннего Поставщика, Ст\
+          оронний Поставщик проверяет, что строка типа устройства (user-agent) отл\
+          ичается от строки типа устройства (user-agent) на основе браузера"
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: ""
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          headers:
+            Etag:
+              description: "Уникальный идентификатор, котрый определяет, изменился\
+                \ ли ресурс"
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchesResponse'
+        "400":
+          description: "Запрос имеет не верный формат, отсутствующие или несовмест\
+            имые тело JSON, параметры URL или поля заголовка"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OBRUErrorResponse'
+        "404":
+          description: "1.\tСППД пытается получить ресурс, который указан в специф\
+            икации, но не реализован на стороне ППД. 2.\tСППД пытается получить ре\
+            сурс, который не определен"
+        "500":
+          description: Что-то пошло не так на стороне Стороннего поставщика.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OBRUErrorResponse'
+      x-swagger-router-controller: Branches
+components:
+  schemas:
+    BankResponse:
+      maxProperties: 3
+      minProperties: 1
+      required:
+      - Data
+      type: object
+      properties:
+        Data:
+          $ref: '#/components/schemas/DataBankResponse'
+        Links:
+          $ref: '#/components/schemas/Links'
+        Meta:
+          $ref: '#/components/schemas/Meta'
+      additionalProperties: false
+      description: Полезная нагрузка ответа информации о списке кредитных организаций
+    DeviceResponse:
+      maxProperties: 3
+      minProperties: 1
+      required:
+      - Data
+      type: object
+      properties:
+        Data:
+          $ref: '#/components/schemas/DataDeviceResponse'
+        Links:
+          $ref: '#/components/schemas/Links'
+        Meta:
+          $ref: '#/components/schemas/Meta'
+      additionalProperties: false
+      description: Полезная нагрузка ответа запроса об устройствах
+      example:
+        Meta:
+          totalPages: 2
+        Links:
+          next: http://example.com/aeiou
+          last: http://example.com/aeiou
+          prev: http://example.com/aeiou
+          self: http://example.com/aeiou
+          first: http://example.com/aeiou
+        Data:
+          Device:
+          - deviceType: "ATM | БК | Банкомат, посредством которого осуществляются\
+              \ операции выдачи наличных денежных средств и (или) безналичные опер\
+              ации с использованием платежных карт (их реквизитов). При этом указа\
+              нный банкомат может быть также оснащен другими функциями (например,\
+              \ функцией приема наличных денег с использованием и без использовани\
+              я платежных карт (их реквизитов), функцией оплаты товаров (работ, ус\
+              луг) без использования платежных карт (их реквизитов)"
+            Availability:
+              StandardAvailability:
+                Day:
+                - closingTime: null
+                  dayCode: 01 | Понедельник
+                  openingTime: 2021-06-05T15:15:13Z
+                  BreakTime:
+                  - breakFromTime: null
+                    breakToTime: null
+                  - breakFromTime: null
+                    breakToTime: null
+                - closingTime: null
+                  dayCode: 01 | Понедельник
+                  openingTime: 2021-06-05T15:15:13Z
+                  BreakTime:
+                  - breakFromTime: null
+                    breakToTime: null
+                  - breakFromTime: null
+                    breakToTime: null
+              sameAsOrganization: true
+              description: description
+              NonStandardAvailability:
+              - fromDate: null
+                toDate: null
+                name: name
+                description: description
+                Day:
+                - null
+                - null
+              - fromDate: null
+                toDate: null
+                name: name
+                description: description
+                Day:
+                - null
+                - null
+              isRestricted: true
+              access24Hours: true
+            PaymentAgent:
+              name: Наименование организации
+              Identification:
+              - identification: "7728240240"
+                schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика
+                  (ИНН)
+              - identification: "7728240240"
+                schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика
+                  (ИНН)
+              paymentAgentIndicator: "БПА | банкомат (касса) банковского платежног\
+                о агента, привлеченного кредитной организацией;"
+            qr: true
+            cards:
+            - AmericanExpress | Международная платежная система
+            - AmericanExpress | Международная платежная система
+            Address:
+              PostalAddressAndAdmZone:
+                PostalAddress:
+                  country: RU
+                  streetName: Садовая
+                  townName: Бигсити
+                  countrySubDivision: Мой край
+                  addressType: DeliveryTo
+                  buildingNumber: "11"
+                  postCode: "0100010"
+                  addressLine:
+                  - addressLine
+                  - addressLine
+                administrationZone: "45388000"
+              Geolocation:
+                GeographicCoordinates:
+                  latitude: 5.962134
+                  longitude: 5.637377
+              fias: fias
+            currentStatus: On | Доступно
+            description: description
+            nfc: true
+            recirculation: true
+            CurrencyExchange:
+            - amountMax: 1.4658129
+              scaleCurrency: 1
+              targetCurrency: null
+              exchangeRate: 1
+              amountMin: 6.0274563
+              fee: 0.8008282
+              exchangeType: Online | Онлайн
+              sourceCurrency: null
+              updateDateTime: null
+              quotationDate: null
+              direction: Sell | Кредитная организация продает валюту
+            - amountMax: 1.4658129
+              scaleCurrency: 1
+              targetCurrency: null
+              exchangeRate: 1
+              amountMin: 6.0274563
+              fee: 0.8008282
+              exchangeType: Online | Онлайн
+              sourceCurrency: null
+              updateDateTime: null
+              quotationDate: null
+              direction: Sell | Кредитная организация продает валюту
+            deviceId: deviceId
+            baseCurrency: RUB
+            Services:
+              Service:
+              - serviceType: CashWithdrawal
+                serviceName: serviceName
+              - serviceType: CashWithdrawal
+                serviceName: serviceName
+            BanknoteIn:
+            - banknoteType: banknoteType
+              currency: null
+            - banknoteType: banknoteType
+              currency: null
+            ContactDetails:
+              emailAddress: emailAddress
+              other: other
+              phoneNumber: phoneNumber
+              mobileNumber: mobileNumber
+              SocialNetworks:
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+            BanknoteOut:
+            - null
+            - null
+            operationType:
+            - ""
+            - ""
+            Accessibilities:
+              Accessibility:
+              - description: description
+                type: Braille | Шрифт Брайля
+              - description: description
+                type: Braille | Шрифт Брайля
+          - deviceType: "ATM | БК | Банкомат, посредством которого осуществляются\
+              \ операции выдачи наличных денежных средств и (или) безналичные опер\
+              ации с использованием платежных карт (их реквизитов). При этом указа\
+              нный банкомат может быть также оснащен другими функциями (например,\
+              \ функцией приема наличных денег с использованием и без использовани\
+              я платежных карт (их реквизитов), функцией оплаты товаров (работ, ус\
+              луг) без использования платежных карт (их реквизитов)"
+            Availability:
+              StandardAvailability:
+                Day:
+                - closingTime: null
+                  dayCode: 01 | Понедельник
+                  openingTime: 2021-06-05T15:15:13Z
+                  BreakTime:
+                  - breakFromTime: null
+                    breakToTime: null
+                  - breakFromTime: null
+                    breakToTime: null
+                - closingTime: null
+                  dayCode: 01 | Понедельник
+                  openingTime: 2021-06-05T15:15:13Z
+                  BreakTime:
+                  - breakFromTime: null
+                    breakToTime: null
+                  - breakFromTime: null
+                    breakToTime: null
+              sameAsOrganization: true
+              description: description
+              NonStandardAvailability:
+              - fromDate: null
+                toDate: null
+                name: name
+                description: description
+                Day:
+                - null
+                - null
+              - fromDate: null
+                toDate: null
+                name: name
+                description: description
+                Day:
+                - null
+                - null
+              isRestricted: true
+              access24Hours: true
+            PaymentAgent:
+              name: Наименование организации
+              Identification:
+              - identification: "7728240240"
+                schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика
+                  (ИНН)
+              - identification: "7728240240"
+                schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика
+                  (ИНН)
+              paymentAgentIndicator: "БПА | банкомат (касса) банковского платежног\
+                о агента, привлеченного кредитной организацией;"
+            qr: true
+            cards:
+            - AmericanExpress | Международная платежная система
+            - AmericanExpress | Международная платежная система
+            Address:
+              PostalAddressAndAdmZone:
+                PostalAddress:
+                  country: RU
+                  streetName: Садовая
+                  townName: Бигсити
+                  countrySubDivision: Мой край
+                  addressType: DeliveryTo
+                  buildingNumber: "11"
+                  postCode: "0100010"
+                  addressLine:
+                  - addressLine
+                  - addressLine
+                administrationZone: "45388000"
+              Geolocation:
+                GeographicCoordinates:
+                  latitude: 5.962134
+                  longitude: 5.637377
+              fias: fias
+            currentStatus: On | Доступно
+            description: description
+            nfc: true
+            recirculation: true
+            CurrencyExchange:
+            - amountMax: 1.4658129
+              scaleCurrency: 1
+              targetCurrency: null
+              exchangeRate: 1
+              amountMin: 6.0274563
+              fee: 0.8008282
+              exchangeType: Online | Онлайн
+              sourceCurrency: null
+              updateDateTime: null
+              quotationDate: null
+              direction: Sell | Кредитная организация продает валюту
+            - amountMax: 1.4658129
+              scaleCurrency: 1
+              targetCurrency: null
+              exchangeRate: 1
+              amountMin: 6.0274563
+              fee: 0.8008282
+              exchangeType: Online | Онлайн
+              sourceCurrency: null
+              updateDateTime: null
+              quotationDate: null
+              direction: Sell | Кредитная организация продает валюту
+            deviceId: deviceId
+            baseCurrency: RUB
+            Services:
+              Service:
+              - serviceType: CashWithdrawal
+                serviceName: serviceName
+              - serviceType: CashWithdrawal
+                serviceName: serviceName
+            BanknoteIn:
+            - banknoteType: banknoteType
+              currency: null
+            - banknoteType: banknoteType
+              currency: null
+            ContactDetails:
+              emailAddress: emailAddress
+              other: other
+              phoneNumber: phoneNumber
+              mobileNumber: mobileNumber
+              SocialNetworks:
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+            BanknoteOut:
+            - null
+            - null
+            operationType:
+            - ""
+            - ""
+            Accessibilities:
+              Accessibility:
+              - description: description
+                type: Braille | Шрифт Брайля
+              - description: description
+                type: Braille | Шрифт Брайля
+    BranchesResponse:
+      maxProperties: 3
+      minProperties: 1
+      required:
+      - Data
+      type: object
+      properties:
+        Data:
+          $ref: '#/components/schemas/DataBranchesResponse'
+        Links:
+          $ref: '#/components/schemas/Links'
+        Meta:
+          $ref: '#/components/schemas/Meta'
+      additionalProperties: false
+      description: Полезная нагрузка ответа запроса об отделениях кредитной организации
+      example:
+        Meta:
+          totalPages: 2
+        Links:
+          next: http://example.com/aeiou
+          last: http://example.com/aeiou
+          prev: http://example.com/aeiou
+          self: http://example.com/aeiou
+          first: http://example.com/aeiou
+        Data:
+          Branch:
+          - branchId: branchId
+            Services:
+              Service:
+              - dateTime: 2021-06-05T15:15:13Z
+                currentStatus: Active | Доступно
+                segment: segment
+                name: name
+                description: description
+                serviceId: serviceId
+                type: Loan | Кредит
+                url: url
+              - dateTime: 2021-06-05T15:15:13Z
+                currentStatus: Active | Доступно
+                segment: segment
+                name: name
+                description: description
+                serviceId: serviceId
+                type: Loan | Кредит
+                url: url
+              CurrencyExchange:
+              - amountMax: 1.4658129
+                scaleCurrency: 1
+                targetCurrency: null
+                exchangeRate: 1
+                amountMin: 6.0274563
+                fee: 0.8008282
+                exchangeType: Online | Онлайн
+                sourceCurrency: null
+                updateDateTime: null
+                quotationDate: null
+                direction: Sell | Кредитная организация продает валюту
+              - amountMax: 1.4658129
+                scaleCurrency: 1
+                targetCurrency: null
+                exchangeRate: 1
+                amountMin: 6.0274563
+                fee: 0.8008282
+                exchangeType: Online | Онлайн
+                sourceCurrency: null
+                updateDateTime: null
+                quotationDate: null
+                direction: Sell | Кредитная организация продает валюту
+            wifi: true
+            equeue: true
+            Address:
+              PostalAddressAndAdmZone:
+                PostalAddress:
+                  country: RU
+                  streetName: Садовая
+                  townName: Бигсити
+                  countrySubDivision: Мой край
+                  addressType: DeliveryTo
+                  buildingNumber: "11"
+                  postCode: "0100010"
+                  addressLine:
+                  - addressLine
+                  - addressLine
+                administrationZone: "45388000"
+              Geolocation:
+                GeographicCoordinates:
+                  latitude: 5.962134
+                  longitude: 5.637377
+              fias: fias
+            name: name
+            Information:
+              Availability:
+                StandardAvailability:
+                  Day:
+                  - closingTime: null
+                    dayCode: 01 | Понедельник
+                    openingTime: 2021-06-05T15:15:13Z
+                    BreakTime:
+                    - breakFromTime: null
+                      breakToTime: null
+                    - breakFromTime: null
+                      breakToTime: null
+                  - closingTime: null
+                    dayCode: 01 | Понедельник
+                    openingTime: 2021-06-05T15:15:13Z
+                    BreakTime:
+                    - breakFromTime: null
+                      breakToTime: null
+                    - breakFromTime: null
+                      breakToTime: null
+                sameAsOrganization: true
+                description: description
+                NonStandardAvailability:
+                - fromDate: null
+                  toDate: null
+                  name: name
+                  description: description
+                  Day:
+                  - null
+                  - null
+                - fromDate: null
+                  toDate: null
+                  name: name
+                  description: description
+                  Day:
+                  - null
+                  - null
+                isRestricted: true
+                access24Hours: true
+              ContactDetails:
+              - emailAddress: emailAddress
+                other: other
+                phoneNumber: phoneNumber
+                mobileNumber: mobileNumber
+                SocialNetworks:
+                - networkName: VK | ВКонтакте
+                  description: description
+                  url: url
+                - networkName: VK | ВКонтакте
+                  description: description
+                  url: url
+              - emailAddress: emailAddress
+                other: other
+                phoneNumber: phoneNumber
+                mobileNumber: mobileNumber
+                SocialNetworks:
+                - networkName: VK | ВКонтакте
+                  description: description
+                  url: url
+                - networkName: VK | ВКонтакте
+                  description: description
+                  url: url
+              segment: null
+            Accessibilities:
+              Accessibility:
+              - description: description
+                type: Braille | Шрифт Брайля
+              - description: description
+                type: Braille | Шрифт Брайля
+          - branchId: branchId
+            Services:
+              Service:
+              - dateTime: 2021-06-05T15:15:13Z
+                currentStatus: Active | Доступно
+                segment: segment
+                name: name
+                description: description
+                serviceId: serviceId
+                type: Loan | Кредит
+                url: url
+              - dateTime: 2021-06-05T15:15:13Z
+                currentStatus: Active | Доступно
+                segment: segment
+                name: name
+                description: description
+                serviceId: serviceId
+                type: Loan | Кредит
+                url: url
+              CurrencyExchange:
+              - amountMax: 1.4658129
+                scaleCurrency: 1
+                targetCurrency: null
+                exchangeRate: 1
+                amountMin: 6.0274563
+                fee: 0.8008282
+                exchangeType: Online | Онлайн
+                sourceCurrency: null
+                updateDateTime: null
+                quotationDate: null
+                direction: Sell | Кредитная организация продает валюту
+              - amountMax: 1.4658129
+                scaleCurrency: 1
+                targetCurrency: null
+                exchangeRate: 1
+                amountMin: 6.0274563
+                fee: 0.8008282
+                exchangeType: Online | Онлайн
+                sourceCurrency: null
+                updateDateTime: null
+                quotationDate: null
+                direction: Sell | Кредитная организация продает валюту
+            wifi: true
+            equeue: true
+            Address:
+              PostalAddressAndAdmZone:
+                PostalAddress:
+                  country: RU
+                  streetName: Садовая
+                  townName: Бигсити
+                  countrySubDivision: Мой край
+                  addressType: DeliveryTo
+                  buildingNumber: "11"
+                  postCode: "0100010"
+                  addressLine:
+                  - addressLine
+                  - addressLine
+                administrationZone: "45388000"
+              Geolocation:
+                GeographicCoordinates:
+                  latitude: 5.962134
+                  longitude: 5.637377
+              fias: fias
+            name: name
+            Information:
+              Availability:
+                StandardAvailability:
+                  Day:
+                  - closingTime: null
+                    dayCode: 01 | Понедельник
+                    openingTime: 2021-06-05T15:15:13Z
+                    BreakTime:
+                    - breakFromTime: null
+                      breakToTime: null
+                    - breakFromTime: null
+                      breakToTime: null
+                  - closingTime: null
+                    dayCode: 01 | Понедельник
+                    openingTime: 2021-06-05T15:15:13Z
+                    BreakTime:
+                    - breakFromTime: null
+                      breakToTime: null
+                    - breakFromTime: null
+                      breakToTime: null
+                sameAsOrganization: true
+                description: description
+                NonStandardAvailability:
+                - fromDate: null
+                  toDate: null
+                  name: name
+                  description: description
+                  Day:
+                  - null
+                  - null
+                - fromDate: null
+                  toDate: null
+                  name: name
+                  description: description
+                  Day:
+                  - null
+                  - null
+                isRestricted: true
+                access24Hours: true
+              ContactDetails:
+              - emailAddress: emailAddress
+                other: other
+                phoneNumber: phoneNumber
+                mobileNumber: mobileNumber
+                SocialNetworks:
+                - networkName: VK | ВКонтакте
+                  description: description
+                  url: url
+                - networkName: VK | ВКонтакте
+                  description: description
+                  url: url
+              - emailAddress: emailAddress
+                other: other
+                phoneNumber: phoneNumber
+                mobileNumber: mobileNumber
+                SocialNetworks:
+                - networkName: VK | ВКонтакте
+                  description: description
+                  url: url
+                - networkName: VK | ВКонтакте
+                  description: description
+                  url: url
+              segment: null
+            Accessibilities:
+              Accessibility:
+              - description: description
+                type: Braille | Шрифт Брайля
+              - description: description
+                type: Braille | Шрифт Брайля
+    DataBranchesResponse:
+      required:
+      - Branch
+      type: object
+      properties:
+        Branch:
+          minItems: 1
+          type: array
+          description: Подразделение финансовой организации
+          items:
+            $ref: '#/components/schemas/Branch'
+      additionalProperties: false
+      description: Раздел данных ответа информации об отделениях кредитной организации
+      example:
+        Branch:
+        - branchId: branchId
+          Services:
+            Service:
+            - dateTime: 2021-06-05T15:15:13Z
+              currentStatus: Active | Доступно
+              segment: segment
+              name: name
+              description: description
+              serviceId: serviceId
+              type: Loan | Кредит
+              url: url
+            - dateTime: 2021-06-05T15:15:13Z
+              currentStatus: Active | Доступно
+              segment: segment
+              name: name
+              description: description
+              serviceId: serviceId
+              type: Loan | Кредит
+              url: url
+            CurrencyExchange:
+            - amountMax: 1.4658129
+              scaleCurrency: 1
+              targetCurrency: null
+              exchangeRate: 1
+              amountMin: 6.0274563
+              fee: 0.8008282
+              exchangeType: Online | Онлайн
+              sourceCurrency: null
+              updateDateTime: null
+              quotationDate: null
+              direction: Sell | Кредитная организация продает валюту
+            - amountMax: 1.4658129
+              scaleCurrency: 1
+              targetCurrency: null
+              exchangeRate: 1
+              amountMin: 6.0274563
+              fee: 0.8008282
+              exchangeType: Online | Онлайн
+              sourceCurrency: null
+              updateDateTime: null
+              quotationDate: null
+              direction: Sell | Кредитная организация продает валюту
+          wifi: true
+          equeue: true
+          Address:
+            PostalAddressAndAdmZone:
+              PostalAddress:
+                country: RU
+                streetName: Садовая
+                townName: Бигсити
+                countrySubDivision: Мой край
+                addressType: DeliveryTo
+                buildingNumber: "11"
+                postCode: "0100010"
+                addressLine:
+                - addressLine
+                - addressLine
+              administrationZone: "45388000"
+            Geolocation:
+              GeographicCoordinates:
+                latitude: 5.962134
+                longitude: 5.637377
+            fias: fias
+          name: name
+          Information:
+            Availability:
+              StandardAvailability:
+                Day:
+                - closingTime: null
+                  dayCode: 01 | Понедельник
+                  openingTime: 2021-06-05T15:15:13Z
+                  BreakTime:
+                  - breakFromTime: null
+                    breakToTime: null
+                  - breakFromTime: null
+                    breakToTime: null
+                - closingTime: null
+                  dayCode: 01 | Понедельник
+                  openingTime: 2021-06-05T15:15:13Z
+                  BreakTime:
+                  - breakFromTime: null
+                    breakToTime: null
+                  - breakFromTime: null
+                    breakToTime: null
+              sameAsOrganization: true
+              description: description
+              NonStandardAvailability:
+              - fromDate: null
+                toDate: null
+                name: name
+                description: description
+                Day:
+                - null
+                - null
+              - fromDate: null
+                toDate: null
+                name: name
+                description: description
+                Day:
+                - null
+                - null
+              isRestricted: true
+              access24Hours: true
+            ContactDetails:
+            - emailAddress: emailAddress
+              other: other
+              phoneNumber: phoneNumber
+              mobileNumber: mobileNumber
+              SocialNetworks:
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+            - emailAddress: emailAddress
+              other: other
+              phoneNumber: phoneNumber
+              mobileNumber: mobileNumber
+              SocialNetworks:
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+            segment: null
+          Accessibilities:
+            Accessibility:
+            - description: description
+              type: Braille | Шрифт Брайля
+            - description: description
+              type: Braille | Шрифт Брайля
+        - branchId: branchId
+          Services:
+            Service:
+            - dateTime: 2021-06-05T15:15:13Z
+              currentStatus: Active | Доступно
+              segment: segment
+              name: name
+              description: description
+              serviceId: serviceId
+              type: Loan | Кредит
+              url: url
+            - dateTime: 2021-06-05T15:15:13Z
+              currentStatus: Active | Доступно
+              segment: segment
+              name: name
+              description: description
+              serviceId: serviceId
+              type: Loan | Кредит
+              url: url
+            CurrencyExchange:
+            - amountMax: 1.4658129
+              scaleCurrency: 1
+              targetCurrency: null
+              exchangeRate: 1
+              amountMin: 6.0274563
+              fee: 0.8008282
+              exchangeType: Online | Онлайн
+              sourceCurrency: null
+              updateDateTime: null
+              quotationDate: null
+              direction: Sell | Кредитная организация продает валюту
+            - amountMax: 1.4658129
+              scaleCurrency: 1
+              targetCurrency: null
+              exchangeRate: 1
+              amountMin: 6.0274563
+              fee: 0.8008282
+              exchangeType: Online | Онлайн
+              sourceCurrency: null
+              updateDateTime: null
+              quotationDate: null
+              direction: Sell | Кредитная организация продает валюту
+          wifi: true
+          equeue: true
+          Address:
+            PostalAddressAndAdmZone:
+              PostalAddress:
+                country: RU
+                streetName: Садовая
+                townName: Бигсити
+                countrySubDivision: Мой край
+                addressType: DeliveryTo
+                buildingNumber: "11"
+                postCode: "0100010"
+                addressLine:
+                - addressLine
+                - addressLine
+              administrationZone: "45388000"
+            Geolocation:
+              GeographicCoordinates:
+                latitude: 5.962134
+                longitude: 5.637377
+            fias: fias
+          name: name
+          Information:
+            Availability:
+              StandardAvailability:
+                Day:
+                - closingTime: null
+                  dayCode: 01 | Понедельник
+                  openingTime: 2021-06-05T15:15:13Z
+                  BreakTime:
+                  - breakFromTime: null
+                    breakToTime: null
+                  - breakFromTime: null
+                    breakToTime: null
+                - closingTime: null
+                  dayCode: 01 | Понедельник
+                  openingTime: 2021-06-05T15:15:13Z
+                  BreakTime:
+                  - breakFromTime: null
+                    breakToTime: null
+                  - breakFromTime: null
+                    breakToTime: null
+              sameAsOrganization: true
+              description: description
+              NonStandardAvailability:
+              - fromDate: null
+                toDate: null
+                name: name
+                description: description
+                Day:
+                - null
+                - null
+              - fromDate: null
+                toDate: null
+                name: name
+                description: description
+                Day:
+                - null
+                - null
+              isRestricted: true
+              access24Hours: true
+            ContactDetails:
+            - emailAddress: emailAddress
+              other: other
+              phoneNumber: phoneNumber
+              mobileNumber: mobileNumber
+              SocialNetworks:
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+            - emailAddress: emailAddress
+              other: other
+              phoneNumber: phoneNumber
+              mobileNumber: mobileNumber
+              SocialNetworks:
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+              - networkName: VK | ВКонтакте
+                description: description
+                url: url
+            segment: null
+          Accessibilities:
+            Accessibility:
+            - description: description
+              type: Braille | Шрифт Брайля
+            - description: description
+              type: Braille | Шрифт Брайля
+    Branch:
+      required:
+      - Address
+      - branchId
+      type: object
+      properties:
+        branchId:
+          maxLength: 35
+          type: string
+          description: "Уникальный и неизменный идентификатор, используемый для ид\
+            ентификации ресурса branches"
+        name:
+          maxLength: 140
+          type: string
+          description: Наименование отделения
+        wifi:
+          type: boolean
+          description: Наличие Wi-Fi
+        equeue:
+          type: boolean
+          description: Наличие электронной очереди
+        Accessibilities:
+          $ref: '#/components/schemas/Accessibilities'
+        Services:
+          $ref: '#/components/schemas/BranchServices'
+        Information:
+          $ref: '#/components/schemas/Information'
+        Address:
+          $ref: '#/components/schemas/PostalAddressAndLocation'
+      additionalProperties: false
+      description: "Общая информация о подразделении кредитной организации, его ус\
+        ловиях работы, предоставляемых услугах и их характеристиках, а также опред\
+        елении его точного местоположения."
+      example:
+        branchId: branchId
+        Services:
+          Service:
+          - dateTime: 2021-06-05T15:15:13Z
+            currentStatus: Active | Доступно
+            segment: segment
+            name: name
+            description: description
+            serviceId: serviceId
+            type: Loan | Кредит
+            url: url
+          - dateTime: 2021-06-05T15:15:13Z
+            currentStatus: Active | Доступно
+            segment: segment
+            name: name
+            description: description
+            serviceId: serviceId
+            type: Loan | Кредит
+            url: url
+          CurrencyExchange:
+          - amountMax: 1.4658129
+            scaleCurrency: 1
+            targetCurrency: null
+            exchangeRate: 1
+            amountMin: 6.0274563
+            fee: 0.8008282
+            exchangeType: Online | Онлайн
+            sourceCurrency: null
+            updateDateTime: null
+            quotationDate: null
+            direction: Sell | Кредитная организация продает валюту
+          - amountMax: 1.4658129
+            scaleCurrency: 1
+            targetCurrency: null
+            exchangeRate: 1
+            amountMin: 6.0274563
+            fee: 0.8008282
+            exchangeType: Online | Онлайн
+            sourceCurrency: null
+            updateDateTime: null
+            quotationDate: null
+            direction: Sell | Кредитная организация продает валюту
+        wifi: true
+        equeue: true
+        Address:
+          PostalAddressAndAdmZone:
+            PostalAddress:
+              country: RU
+              streetName: Садовая
+              townName: Бигсити
+              countrySubDivision: Мой край
+              addressType: DeliveryTo
+              buildingNumber: "11"
+              postCode: "0100010"
+              addressLine:
+              - addressLine
+              - addressLine
+            administrationZone: "45388000"
+          Geolocation:
+            GeographicCoordinates:
+              latitude: 5.962134
+              longitude: 5.637377
+          fias: fias
+        name: name
+        Information:
+          Availability:
+            StandardAvailability:
+              Day:
+              - closingTime: null
+                dayCode: 01 | Понедельник
+                openingTime: 2021-06-05T15:15:13Z
+                BreakTime:
+                - breakFromTime: null
+                  breakToTime: null
+                - breakFromTime: null
+                  breakToTime: null
+              - closingTime: null
+                dayCode: 01 | Понедельник
+                openingTime: 2021-06-05T15:15:13Z
+                BreakTime:
+                - breakFromTime: null
+                  breakToTime: null
+                - breakFromTime: null
+                  breakToTime: null
+            sameAsOrganization: true
+            description: description
+            NonStandardAvailability:
+            - fromDate: null
+              toDate: null
+              name: name
+              description: description
+              Day:
+              - null
+              - null
+            - fromDate: null
+              toDate: null
+              name: name
+              description: description
+              Day:
+              - null
+              - null
+            isRestricted: true
+            access24Hours: true
+          ContactDetails:
+          - emailAddress: emailAddress
+            other: other
+            phoneNumber: phoneNumber
+            mobileNumber: mobileNumber
+            SocialNetworks:
+            - networkName: VK | ВКонтакте
+              description: description
+              url: url
+            - networkName: VK | ВКонтакте
+              description: description
+              url: url
+          - emailAddress: emailAddress
+            other: other
+            phoneNumber: phoneNumber
+            mobileNumber: mobileNumber
+            SocialNetworks:
+            - networkName: VK | ВКонтакте
+              description: description
+              url: url
+            - networkName: VK | ВКонтакте
+              description: description
+              url: url
+          segment: null
+        Accessibilities:
+          Accessibility:
+          - description: description
+            type: Braille | Шрифт Брайля
+          - description: description
+            type: Braille | Шрифт Брайля
+    SocialNetworks:
+      required:
+      - networkName
+      - url
+      type: object
+      properties:
+        networkName:
+          $ref: '#/components/schemas/SocialNetworkNameCode'
+        url:
+          maxLength: 2048
+          type: string
+          description: URL-адрес для социальной сети/мессенджера
+        description:
+          maxLength: 255
+          type: string
+          description: Дополнительная информация в свободной форме
+      additionalProperties: false
+      description: Контакты в социальных сетях
+      example:
+        networkName: VK | ВКонтакте
+        description: description
+        url: url
+    SocialNetworkNameCode:
+      type: string
+      description: Название социальной сети/мессенджера
+      enum:
+      - VK | ВКонтакте
+      - Facebook | Facebook
+      - OK | Одноклассники
+      - Instagram | Instagram
+      - Twitter | Twitter
+      - Messenger | Messenger
+      - iMessage | iMessage
+      - Viber | Viber
+      - WhatsApp | WhatsApp
+      - Telegram | Телеграм
+    DataDeviceResponse:
+      type: object
+      properties:
+        Device:
+          minItems: 0
+          type: array
+          description: Комплексный объект банкомат или устройство
+          items:
+            $ref: '#/components/schemas/Device'
+      additionalProperties: false
+      description: Раздел данных ответа информации об устройствах
+      example:
+        Device:
+        - deviceType: "ATM | БК | Банкомат, посредством которого осуществляются оп\
+            ерации выдачи наличных денежных средств и (или) безналичные операции с\
+            \ использованием платежных карт (их реквизитов). При этом указанный ба\
+            нкомат может быть также оснащен другими функциями (например, функцией\
+            \ приема наличных денег с использованием и без использования платежных\
+            \ карт (их реквизитов), функцией оплаты товаров (работ, услуг) без исп\
+            ользования платежных карт (их реквизитов)"
+          Availability:
+            StandardAvailability:
+              Day:
+              - closingTime: null
+                dayCode: 01 | Понедельник
+                openingTime: 2021-06-05T15:15:13Z
+                BreakTime:
+                - breakFromTime: null
+                  breakToTime: null
+                - breakFromTime: null
+                  breakToTime: null
+              - closingTime: null
+                dayCode: 01 | Понедельник
+                openingTime: 2021-06-05T15:15:13Z
+                BreakTime:
+                - breakFromTime: null
+                  breakToTime: null
+                - breakFromTime: null
+                  breakToTime: null
+            sameAsOrganization: true
+            description: description
+            NonStandardAvailability:
+            - fromDate: null
+              toDate: null
+              name: name
+              description: description
+              Day:
+              - null
+              - null
+            - fromDate: null
+              toDate: null
+              name: name
+              description: description
+              Day:
+              - null
+              - null
+            isRestricted: true
+            access24Hours: true
+          PaymentAgent:
+            name: Наименование организации
+            Identification:
+            - identification: "7728240240"
+              schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика
+                (ИНН)
+            - identification: "7728240240"
+              schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика
+                (ИНН)
+            paymentAgentIndicator: "БПА | банкомат (касса) банковского платежного\
+              \ агента, привлеченного кредитной организацией;"
+          qr: true
+          cards:
+          - AmericanExpress | Международная платежная система
+          - AmericanExpress | Международная платежная система
+          Address:
+            PostalAddressAndAdmZone:
+              PostalAddress:
+                country: RU
+                streetName: Садовая
+                townName: Бигсити
+                countrySubDivision: Мой край
+                addressType: DeliveryTo
+                buildingNumber: "11"
+                postCode: "0100010"
+                addressLine:
+                - addressLine
+                - addressLine
+              administrationZone: "45388000"
+            Geolocation:
+              GeographicCoordinates:
+                latitude: 5.962134
+                longitude: 5.637377
+            fias: fias
+          currentStatus: On | Доступно
+          description: description
+          nfc: true
+          recirculation: true
+          CurrencyExchange:
+          - amountMax: 1.4658129
+            scaleCurrency: 1
+            targetCurrency: null
+            exchangeRate: 1
+            amountMin: 6.0274563
+            fee: 0.8008282
+            exchangeType: Online | Онлайн
+            sourceCurrency: null
+            updateDateTime: null
+            quotationDate: null
+            direction: Sell | Кредитная организация продает валюту
+          - amountMax: 1.4658129
+            scaleCurrency: 1
+            targetCurrency: null
+            exchangeRate: 1
+            amountMin: 6.0274563
+            fee: 0.8008282
+            exchangeType: Online | Онлайн
+            sourceCurrency: null
+            updateDateTime: null
+            quotationDate: null
+            direction: Sell | Кредитная организация продает валюту
+          deviceId: deviceId
+          baseCurrency: RUB
+          Services:
+            Service:
+            - serviceType: CashWithdrawal
+              serviceName: serviceName
+            - serviceType: CashWithdrawal
+              serviceName: serviceName
+          BanknoteIn:
+          - banknoteType: banknoteType
+            currency: null
+          - banknoteType: banknoteType
+            currency: null
+          ContactDetails:
+            emailAddress: emailAddress
+            other: other
+            phoneNumber: phoneNumber
+            mobileNumber: mobileNumber
+            SocialNetworks:
+            - networkName: VK | ВКонтакте
+              description: description
+              url: url
+            - networkName: VK | ВКонтакте
+              description: description
+              url: url
+          BanknoteOut:
+          - null
+          - null
+          operationType:
+          - ""
+          - ""
+          Accessibilities:
+            Accessibility:
+            - description: description
+              type: Braille | Шрифт Брайля
+            - description: description
+              type: Braille | Шрифт Брайля
+        - deviceType: "ATM | БК | Банкомат, посредством которого осуществляются оп\
+            ерации выдачи наличных денежных средств и (или) безналичные операции с\
+            \ использованием платежных карт (их реквизитов). При этом указанный ба\
+            нкомат может быть также оснащен другими функциями (например, функцией\
+            \ приема наличных денег с использованием и без использования платежных\
+            \ карт (их реквизитов), функцией оплаты товаров (работ, услуг) без исп\
+            ользования платежных карт (их реквизитов)"
+          Availability:
+            StandardAvailability:
+              Day:
+              - closingTime: null
+                dayCode: 01 | Понедельник
+                openingTime: 2021-06-05T15:15:13Z
+                BreakTime:
+                - breakFromTime: null
+                  breakToTime: null
+                - breakFromTime: null
+                  breakToTime: null
+              - closingTime: null
+                dayCode: 01 | Понедельник
+                openingTime: 2021-06-05T15:15:13Z
+                BreakTime:
+                - breakFromTime: null
+                  breakToTime: null
+                - breakFromTime: null
+                  breakToTime: null
+            sameAsOrganization: true
+            description: description
+            NonStandardAvailability:
+            - fromDate: null
+              toDate: null
+              name: name
+              description: description
+              Day:
+              - null
+              - null
+            - fromDate: null
+              toDate: null
+              name: name
+              description: description
+              Day:
+              - null
+              - null
+            isRestricted: true
+            access24Hours: true
+          PaymentAgent:
+            name: Наименование организации
+            Identification:
+            - identification: "7728240240"
+              schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика
+                (ИНН)
+            - identification: "7728240240"
+              schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика
+                (ИНН)
+            paymentAgentIndicator: "БПА | банкомат (касса) банковского платежного\
+              \ агента, привлеченного кредитной организацией;"
+          qr: true
+          cards:
+          - AmericanExpress | Международная платежная система
+          - AmericanExpress | Международная платежная система
+          Address:
+            PostalAddressAndAdmZone:
+              PostalAddress:
+                country: RU
+                streetName: Садовая
+                townName: Бигсити
+                countrySubDivision: Мой край
+                addressType: DeliveryTo
+                buildingNumber: "11"
+                postCode: "0100010"
+                addressLine:
+                - addressLine
+                - addressLine
+              administrationZone: "45388000"
+            Geolocation:
+              GeographicCoordinates:
+                latitude: 5.962134
+                longitude: 5.637377
+            fias: fias
+          currentStatus: On | Доступно
+          description: description
+          nfc: true
+          recirculation: true
+          CurrencyExchange:
+          - amountMax: 1.4658129
+            scaleCurrency: 1
+            targetCurrency: null
+            exchangeRate: 1
+            amountMin: 6.0274563
+            fee: 0.8008282
+            exchangeType: Online | Онлайн
+            sourceCurrency: null
+            updateDateTime: null
+            quotationDate: null
+            direction: Sell | Кредитная организация продает валюту
+          - amountMax: 1.4658129
+            scaleCurrency: 1
+            targetCurrency: null
+            exchangeRate: 1
+            amountMin: 6.0274563
+            fee: 0.8008282
+            exchangeType: Online | Онлайн
+            sourceCurrency: null
+            updateDateTime: null
+            quotationDate: null
+            direction: Sell | Кредитная организация продает валюту
+          deviceId: deviceId
+          baseCurrency: RUB
+          Services:
+            Service:
+            - serviceType: CashWithdrawal
+              serviceName: serviceName
+            - serviceType: CashWithdrawal
+              serviceName: serviceName
+          BanknoteIn:
+          - banknoteType: banknoteType
+            currency: null
+          - banknoteType: banknoteType
+            currency: null
+          ContactDetails:
+            emailAddress: emailAddress
+            other: other
+            phoneNumber: phoneNumber
+            mobileNumber: mobileNumber
+            SocialNetworks:
+            - networkName: VK | ВКонтакте
+              description: description
+              url: url
+            - networkName: VK | ВКонтакте
+              description: description
+              url: url
+          BanknoteOut:
+          - null
+          - null
+          operationType:
+          - ""
+          - ""
+          Accessibilities:
+            Accessibility:
+            - description: description
+              type: Braille | Шрифт Брайля
+            - description: description
+              type: Braille | Шрифт Брайля
+    Device:
+      required:
+      - Address
+      - Services
+      - baseCurrency
+      - cards
+      - currentStatus
+      - deviceId
+      - deviceType
+      - nfc
+      - operationType
+      - qr
+      type: object
+      properties:
+        deviceId:
+          maxLength: 35
+          type: string
+          description: "Уникальный и неизменный идентификатор, используемый для ид\
+            ентификации ресурса devices"
+        operationType:
+          minItems: 1
+          type: array
+          description: Буквенные коды видов операций
+          items:
+            allOf:
+            - $ref: '#/components/schemas/OperationTypeCode'
+        deviceType:
+          $ref: '#/components/schemas/DeviceTypeCode'
+        nfc:
+          type: boolean
+          description: Использование бесконтактной технологии
+        qr:
+          type: boolean
+          description: Возможность считывания QR-кодов (штрих-кодов) при совершении
+            операций
+        recirculation:
+          type: boolean
+          description: Наличие функции рециркуляции банкнот
+        baseCurrency:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyCode'
+        BanknoteIn:
+          type: array
+          description: "Номинал и валюта купюр при приеме. Если массив пустой, то\
+            \ валюта нет может быть принята"
+          items:
+            $ref: '#/components/schemas/Banknote'
+        BanknoteOut:
+          type: array
+          description: "Номинал и валюта купюр при выдаче. Если массив пустой, то\
+            \ валюты нет в наличии"
+          items:
+            $ref: '#/components/schemas/Banknote'
+        cards:
+          type: array
+          description: "Платёжные карты, доступные для использования на данном обо\
+            рудовании"
+          items:
+            $ref: '#/components/schemas/CardSchemeNameCode'
+        currentStatus:
+          $ref: '#/components/schemas/DeviceCurrentStatusCode'
+        description:
+          maxLength: 255
+          type: string
+          description: Дополнительная информация в свободной форме
+        Services:
+          $ref: '#/components/schemas/Services'
+        Availability:
+          $ref: '#/components/schemas/Availability'
+        Accessibilities:
+          $ref: '#/components/schemas/Accessibilities'
+        PaymentAgent:
+          $ref: '#/components/schemas/PaymentAgent'
+        CurrencyExchange:
+          type: array
+          description: Подробная информация об обмене валюты
+          items:
+            $ref: '#/components/schemas/CurrencyExchange'
+        Address:
+          $ref: '#/components/schemas/PostalAddressAndLocation'
+        ContactDetails:
+          $ref: '#/components/schemas/ContactDetails'
+      additionalProperties: false
+      description: "Общая информация о банкомате или другом устройствае кредитной\
+        \ организации и привлеченных банковских платежных агентов (субагентов) о е\
+        го условиях работы, предоставляемых услугах и их характеристиках, а также\
+        \ определении его точного местоположения"
+      example:
+        deviceType: "ATM | БК | Банкомат, посредством которого осуществляются опер\
+          ации выдачи наличных денежных средств и (или) безналичные операции с исп\
+          ользованием платежных карт (их реквизитов). При этом указанный банкомат\
+          \ может быть также оснащен другими функциями (например, функцией приема\
+          \ наличных денег с использованием и без использования платежных карт (их\
+          \ реквизитов), функцией оплаты товаров (работ, услуг) без использования\
+          \ платежных карт (их реквизитов)"
+        Availability:
+          StandardAvailability:
+            Day:
+            - closingTime: null
+              dayCode: 01 | Понедельник
+              openingTime: 2021-06-05T15:15:13Z
+              BreakTime:
+              - breakFromTime: null
+                breakToTime: null
+              - breakFromTime: null
+                breakToTime: null
+            - closingTime: null
+              dayCode: 01 | Понедельник
+              openingTime: 2021-06-05T15:15:13Z
+              BreakTime:
+              - breakFromTime: null
+                breakToTime: null
+              - breakFromTime: null
+                breakToTime: null
+          sameAsOrganization: true
+          description: description
+          NonStandardAvailability:
+          - fromDate: null
+            toDate: null
+            name: name
+            description: description
+            Day:
+            - null
+            - null
+          - fromDate: null
+            toDate: null
+            name: name
+            description: description
+            Day:
+            - null
+            - null
+          isRestricted: true
+          access24Hours: true
+        PaymentAgent:
+          name: Наименование организации
+          Identification:
+          - identification: "7728240240"
+            schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика (ИНН)
+          - identification: "7728240240"
+            schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика (ИНН)
+          paymentAgentIndicator: "БПА | банкомат (касса) банковского платежного аг\
+            ента, привлеченного кредитной организацией;"
+        qr: true
+        cards:
+        - AmericanExpress | Международная платежная система
+        - AmericanExpress | Международная платежная система
+        Address:
+          PostalAddressAndAdmZone:
+            PostalAddress:
+              country: RU
+              streetName: Садовая
+              townName: Бигсити
+              countrySubDivision: Мой край
+              addressType: DeliveryTo
+              buildingNumber: "11"
+              postCode: "0100010"
+              addressLine:
+              - addressLine
+              - addressLine
+            administrationZone: "45388000"
+          Geolocation:
+            GeographicCoordinates:
+              latitude: 5.962134
+              longitude: 5.637377
+          fias: fias
+        currentStatus: On | Доступно
+        description: description
+        nfc: true
+        recirculation: true
+        CurrencyExchange:
+        - amountMax: 1.4658129
+          scaleCurrency: 1
+          targetCurrency: null
+          exchangeRate: 1
+          amountMin: 6.0274563
+          fee: 0.8008282
+          exchangeType: Online | Онлайн
+          sourceCurrency: null
+          updateDateTime: null
+          quotationDate: null
+          direction: Sell | Кредитная организация продает валюту
+        - amountMax: 1.4658129
+          scaleCurrency: 1
+          targetCurrency: null
+          exchangeRate: 1
+          amountMin: 6.0274563
+          fee: 0.8008282
+          exchangeType: Online | Онлайн
+          sourceCurrency: null
+          updateDateTime: null
+          quotationDate: null
+          direction: Sell | Кредитная организация продает валюту
+        deviceId: deviceId
+        baseCurrency: RUB
+        Services:
+          Service:
+          - serviceType: CashWithdrawal
+            serviceName: serviceName
+          - serviceType: CashWithdrawal
+            serviceName: serviceName
+        BanknoteIn:
+        - banknoteType: banknoteType
+          currency: null
+        - banknoteType: banknoteType
+          currency: null
+        ContactDetails:
+          emailAddress: emailAddress
+          other: other
+          phoneNumber: phoneNumber
+          mobileNumber: mobileNumber
+          SocialNetworks:
+          - networkName: VK | ВКонтакте
+            description: description
+            url: url
+          - networkName: VK | ВКонтакте
+            description: description
+            url: url
+        BanknoteOut:
+        - null
+        - null
+        operationType:
+        - ""
+        - ""
+        Accessibilities:
+          Accessibility:
+          - description: description
+            type: Braille | Шрифт Брайля
+          - description: description
+            type: Braille | Шрифт Брайля
+    Banknote:
+      required:
+      - currency
+      type: object
+      properties:
+        currency:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyCode'
+        banknoteType:
+          type: string
+          description: Номинал купюр
+      additionalProperties: false
+      description: Информация о банкнотах
+      example:
+        banknoteType: banknoteType
+        currency: null
+    PaymentAgent:
+      type: object
+      properties:
+        paymentAgentIndicator:
+          $ref: '#/components/schemas/PaymentAgentIndicatorCode'
+        name:
+          maxLength: 255
+          type: string
+          description: "Наименование банковского платежного агента (субагента) в с\
+            оответствии с ЕГРЮЛ или фамилия, имя, отчество (при наличии) банковско\
+            го платежного агента (субагента) в соответствии с ЕГРИП"
+          example: Наименование организации
+        Identification:
+          minItems: 1
+          type: array
+          description: Идентификация юридического или физического лица.
+          items:
+            $ref: '#/components/schemas/Identification'
+      additionalProperties: false
+      description: Информация о банковском платежном агенте (субагенте)
+      example:
+        name: Наименование организации
+        Identification:
+        - identification: "7728240240"
+          schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика (ИНН)
+        - identification: "7728240240"
+          schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика (ИНН)
+        paymentAgentIndicator: "БПА | банкомат (касса) банковского платежного аген\
+          та, привлеченного кредитной организацией;"
+    Identification:
+      required:
+      - identification
+      - schemeName
+      type: object
+      properties:
+        schemeName:
+          $ref: '#/components/schemas/PartyIdentificationCode'
+        identification:
+          maxLength: 35
+          type: string
+          description: "Уникальный и однозначный идентификатор участника, присвоен\
+            ный идентифицирующей организацией."
+          example: "7728240240"
+      additionalProperties: false
+      description: Идентификация юридического или физического лица
+      example:
+        identification: "7728240240"
+        schemeName: RU.CBR.TXID | Идентификационный номер налогоплательщика (ИНН)
+    PaymentAgentIndicatorCode:
+      type: string
+      description: Код признака банковского платежного агента (субагента)
+      enum:
+      - "БПА | банкомат (касса) банковского платежного агента, привлеченного креди\
+        тной организацией;"
+      - "БПС | банкомат (касса) банковского платежного субагента, привлеченного ба\
+        нковским платежным агентом, привлеченным кредитной организацией"
+    PartyIdentificationCode:
+      maxLength: 35
+      type: string
+      description: Схема идентификации юридического или физического лица
+      enum:
+      - RU.CBR.TXID | Идентификационный номер налогоплательщика (ИНН)
+      - RU.CBR.OGRN | Основной государственный регистрационный номер (ОГРН)
+    CurrencyExchange:
+      required:
+      - direction
+      - exchangeRate
+      - exchangeType
+      - scaleCurrency
+      - sourceCurrency
+      - targetCurrency
+      type: object
+      properties:
+        exchangeType:
+          $ref: '#/components/schemas/ExchangeTypeCode'
+        sourceCurrency:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyCode'
+        targetCurrency:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyCode'
+        scaleCurrency:
+          type: integer
+          description: "Количество единиц targetCurrency, для которого установлен\
+            \ курс обмена"
+          example: 1
+        exchangeRate:
+          type: number
+          description: "Коэффициент, используемый для перевода суммы из одной валю\
+            ты в другую. Это отражает цену, по которой одна валюта была куплена за\
+            \ другую валюту"
+          example: 1
+        fee:
+          type: number
+          description: Комиссия за операцию обмена валюты
+          format: float
+        amountMin:
+          type: number
+          description: Минимальная сумма для обмена
+          format: float
+        amountMax:
+          type: number
+          description: Максимальная сумма для обмена
+          format: float
+        direction:
+          $ref: '#/components/schemas/CurrencyExchangeDirection'
+        quotationDate:
+          $ref: '#/components/schemas/ISODateTime'
+        updateDateTime:
+          $ref: '#/components/schemas/ISODateTime'
+      additionalProperties: false
+      description: Подробная информация об обмене валюты
+      example:
+        amountMax: 1.4658129
+        scaleCurrency: 1
+        targetCurrency: null
+        exchangeRate: 1
+        amountMin: 6.0274563
+        fee: 0.8008282
+        exchangeType: Online | Онлайн
+        sourceCurrency: null
+        updateDateTime: null
+        quotationDate: null
+        direction: Sell | Кредитная организация продает валюту
+    Geolocation:
+      required:
+      - GeographicCoordinates
+      type: object
+      properties:
+        GeographicCoordinates:
+          $ref: '#/components/schemas/GeographicCoordinates'
+      description: Локация объекта в географических координатах
+      example:
+        GeographicCoordinates:
+          latitude: 5.962134
+          longitude: 5.637377
+    PostalAddressAndLocation:
+      type: object
+      properties:
+        PostalAddressAndAdmZone:
+          $ref: '#/components/schemas/PostalAddressAndAdmZone'
+        fias:
+          maxLength: 255
+          type: string
+          description: "Уникальный номер адреса объекта адресации (объектов недвиж\
+            имости: земельного участка, здания  (сооружения или объекта незавершен\
+            ного строительства), помещения (расположенного в здании или сооружении\
+            )  в Государственном адресном реестре федеральной информационной адрес\
+            ной системы (ФИАС).  В случае отсутствия в ФИАС уникального номера адр\
+            еса объекта адресации (при поиске такого номера для всех адресных элем\
+            ентов)  в поле указывается уникальный номер адресообразующего элемента\
+            \ для последнего элемента улично-дорожной сети. Для стран – участников\
+            \ ЕАЭС поле заполняется значением константы EAEU"
+        Geolocation:
+          $ref: '#/components/schemas/Geolocation'
+      description: "Определяет точное местонахождение объекта, принадлежность его\
+        \ к муниципальной территории"
+      example:
+        PostalAddressAndAdmZone:
+          PostalAddress:
+            country: RU
+            streetName: Садовая
+            townName: Бигсити
+            countrySubDivision: Мой край
+            addressType: DeliveryTo
+            buildingNumber: "11"
+            postCode: "0100010"
+            addressLine:
+            - addressLine
+            - addressLine
+          administrationZone: "45388000"
+        Geolocation:
+          GeographicCoordinates:
+            latitude: 5.962134
+            longitude: 5.637377
+        fias: fias
+    DataBankResponse:
+      type: object
+      properties:
+        Bank:
+          minItems: 0
+          type: array
+          description: Комплексный объект кредитной организации
+          items:
+            $ref: '#/components/schemas/Bank'
+      additionalProperties: false
+      description: Раздел данных ответа информации о кредитных организациях
+    Bank:
+      required:
+      - PostalAddress
+      - bankId
+      - bankName
+      - baseUrl
+      type: object
+      properties:
+        bankId:
+          maxLength: 35
+          type: string
+          description: "Уникальный и неизменный идентификатор, используемый для ид\
+            ентификации ресурса 'banks' (ресурс кредитной организации)"
+        bicfi:
+          $ref: '#/components/schemas/BICFIIdentifier'
+        bic:
+          $ref: '#/components/schemas/BIKCode'
+        clearingSystemMemberId:
+          maxLength: 35
+          type: string
+          description: Идентификатор участника в платежной системе.
+        baseUrl:
+          maxLength: 35
+          type: string
+          description: Базовый URL кредитной организации
+        bankName:
+          maxLength: 140
+          type: string
+          description: Наименование кредитной организации.
+        bankNameEng:
+          maxLength: 140
+          type: string
+          description: Наименование кредитной организации на английском языке.
+        shortBankName:
+          maxLength: 35
+          type: string
+          description: Сокращенное наименование кредитной организации.
+        bankDescription:
+          maxLength: 255
+          type: string
+          description: Детальное описание кредитной организации.
+        legalEntityId:
+          maxLength: 20
+          type: string
+          description: Код идентификации юридических лиц LEI.
+        PostalAddress:
+          $ref: '#/components/schemas/PostalAddress'
+      additionalProperties: false
+      description: "Общая информация о кредитной организации, служащая для ее иден\
+        тификации и позволяющая определить базовые URL для предоставления публично\
+        й информации. Используется  в реестре поставщиков публичной информации  Ср\
+        еды Открытых банковских интерфейсов."
+    Links:
+      required:
+      - self
+      type: object
+      properties:
+        self:
+          type: string
+          format: uri
+        first:
+          type: string
+          format: uri
+        prev:
+          type: string
+          format: uri
+        next:
+          type: string
+          format: uri
+        last:
+          type: string
+          format: uri
+      additionalProperties: false
+      description: "ППУ предоставляет постраничный ответ для операций GET, которые\
+        \ возвращают множественные записи."
+      example:
+        next: http://example.com/aeiou
+        last: http://example.com/aeiou
+        prev: http://example.com/aeiou
+        self: http://example.com/aeiou
+        first: http://example.com/aeiou
+    Meta:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          description: Указывает на количество передаваемых страниц
+      additionalProperties: false
+      description: "Раздел Meta обязателен, но может быть пустым. Необязательный э\
+        лемент - «TotalPages», указывает на количество передаваемых страниц. Если\
+        \ передается более одной страницы, то элемент «TotalPages» обязательно при\
+        сутствует."
+      example:
+        totalPages: 2
+    GeographicCoordinates:
+      required:
+      - latitude
+      - longitude
+      type: object
+      properties:
+        latitude:
+          type: number
+          description: Широта.
+          format: float
+        longitude:
+          type: number
+          description: Долгота.
+          format: float
+      description: Географические координаты.
+      example:
+        latitude: 5.962134
+        longitude: 5.637377
+    BICFIIdentifier:
+      pattern: "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}"
+      type: string
+      description: SWIFT bic
+    BIKCode:
+      type: string
+      description: "SWIFT bic, актуальный справочник на сайте Центрального Банка Р\
+        осии."
+    DeviceTypeCode:
+      maxLength: 6
+      type: string
+      description: Тип устройства
+      enum:
+      - "ATM | БК | Банкомат, посредством которого осуществляются операции выдачи\
+        \ наличных денежных средств и (или) безналичные операции с использованием\
+        \ платежных карт (их реквизитов). При этом указанный банкомат может быть т\
+        акже оснащен другими функциями (например, функцией приема наличных денег с\
+        \ использованием и без использования платежных карт (их реквизитов), функц\
+        ией оплаты товаров (работ, услуг) без использования платежных карт (их рек\
+        визитов)"
+      - "ATMAcceptanceOnly | Банкомат, посредством которого осуществляются только\
+        \ операции по приему наличных денежных средств без использования платежных\
+        \ карт (их реквизитов). При этом указанный банкомат не может быть оснащен\
+        \ другими функциями (например, функцией выдачи (приема) наличных денег с и\
+        спользованием платежных карт (их реквизитов), функцией оплаты товаров (раб\
+        от, услуг) с использования платежных карт (их реквизитов)"
+      - "ElectronicTerminalFixed | С | Электронное устройство, работающее в предел\
+        ах помещения организации торговли и услуг, в котором оно установлено, с пр\
+        именением как проводной, так и беспроводной технологии (стационарный элект\
+        ронный терминал)"
+      - "ElectronicTerminalMobile | М | Электронное устройство, работающее с приме\
+        нением каналов удаленного соединения, в том числе информационно-телекоммун\
+        икационной сети «Интернет», абонентское устройство мобильной связи, оборуд\
+        ованное картридером и специальным мобильным приложением (мобильный (перено\
+        сной) электронный терминал)"
+      - "Imprinter | И | Механическое устройство, предназначенное для переноса отт\
+        иска рельефных реквизитов платежной карты на документ, составленный на бум\
+        ажном носителе (импринтер)"
+      - "Terminal | Т | Автоматическое устройство, посредством которого держатель\
+        \ платежных карт самостоятельно, без участия уполномоченного сотрудника кр\
+        едитной организации, организации торговли и услуг, может совершать безнали\
+        чные операции с использованием платежных карт, конструкция которого не пре\
+        дусматривает выдачу (прием) наличных денег (терминал безналичной оплаты)"
+      - Cashbox | К | Касса в организации торговли и услуг
+      - CashboxModile | КМ | Мобильная (передвижная) касса
+    OperationTypeCode:
+      maxLength: 6
+      type: string
+      description: Виды операций
+      enum:
+      - CashWithdrawal | НВ | Выдача наличных денежных средств
+      - "CashAcceptanceGoods | НО | Прием наличных денежных средств в целях оплаты\
+        \ товаров (работ, услуг)"
+      - "CashAcceptanceOther | НП | Прием наличных денежных средств не в целях опл\
+        аты товаров (работ, услуг) (например, погашение кредитов, зачисление на сч\
+        ета физических лиц, увеличение остатка электронных денежных средств)"
+      - "CashlessPaymentGoods | БО | Безналичная оплата товаров (работ, услуг)"
+      - CashlessPaymentOther | БП | Прочие безналичные операции
+    DeviceCurrentStatusCode:
+      type: string
+      description: Текущий статус оборудования.
+      enum:
+      - On | Доступно
+      - Off | Недоступно
+      - TempOff | Временно недоступен
+    CardSchemeNameCode:
+      type: string
+      description: Наименование схемы карты
+      enum:
+      - AmericanExpress | Международная платежная система
+      - Diners | Международная платежная система
+      - Discover | Международная платежная система
+      - MasterCard | Международная платежная система
+      - VISA | Международная платежная система
+      - MIR | Российская национальная платежная система
+      - ArCa | Армянская национальная платежная система
+      - BELKART | Белорусская национальная платежная система
+      - ELCART | Киргизская национальная платежная система
+      - JCB | Платежная система Японии
+      - UnionPay | Национальная платежная система Китая
+    ExchangeTypeCode:
+      type: string
+      description: Тип обмена валюты.
+      enum:
+      - Online | Онлайн
+      - Cash | Наличные
+      - Device | Банкомат
+      - Cashless | Безналичный
+    CurrencyExchangeDirection:
+      type: string
+      description: Направление обмена валюты.
+      enum:
+      - Sell | Кредитная организация продает валюту
+      - Buy | Кредитная организация покупает валюту
+    Services:
+      required:
+      - Service
+      type: object
+      properties:
+        Service:
+          type: array
+          description: "Услуга, доступная на оборудовании"
+          items:
+            $ref: '#/components/schemas/Service'
+      additionalProperties: false
+      description: Услуги на оборудовании
+      example:
+        Service:
+        - serviceType: CashWithdrawal
+          serviceName: serviceName
+        - serviceType: CashWithdrawal
+          serviceName: serviceName
+    Service:
+      required:
+      - serviceType;
+      type: object
+      properties:
+        serviceType:
+          $ref: '#/components/schemas/DeviceServiceTypeCode'
+        serviceName:
+          maxLength: 40
+          type: string
+          description: Дополнительная информация в свободной форме
+      additionalProperties: false
+      description: "Услуга, доступная на оборудовании"
+      example:
+        serviceType: CashWithdrawal
+        serviceName: serviceName
+    Availability:
+      required:
+      - StandardAvailability;
+      - access24Hours;
+      - isRestricted;
+      - sameAsOrganization;
+      type: object
+      properties:
+        access24Hours:
+          type: boolean
+          description: Круглосуточный режим работы
+        isRestricted:
+          type: boolean
+          description: Доступ к объекту ограничен системой пропуска и прочее
+        sameAsOrganization:
+          type: boolean
+          description: "Режим работы объекта зависит от режима работы другого объе\
+            кта, в котором описываемый объект расположен"
+        description:
+          maxLength: 255
+          type: string
+          description: Дополнительная информация в свободной форме
+        StandardAvailability:
+          $ref: '#/components/schemas/StandardAvailability'
+        NonStandardAvailability:
+          type: array
+          description: Не стандартная доступность
+          items:
+            $ref: '#/components/schemas/NonStandardAvailability'
+      description: Комплексный тип доступности.
+      example:
+        StandardAvailability:
+          Day:
+          - closingTime: null
+            dayCode: 01 | Понедельник
+            openingTime: 2021-06-05T15:15:13Z
+            BreakTime:
+            - breakFromTime: null
+              breakToTime: null
+            - breakFromTime: null
+              breakToTime: null
+          - closingTime: null
+            dayCode: 01 | Понедельник
+            openingTime: 2021-06-05T15:15:13Z
+            BreakTime:
+            - breakFromTime: null
+              breakToTime: null
+            - breakFromTime: null
+              breakToTime: null
+        sameAsOrganization: true
+        description: description
+        NonStandardAvailability:
+        - fromDate: null
+          toDate: null
+          name: name
+          description: description
+          Day:
+          - null
+          - null
+        - fromDate: null
+          toDate: null
+          name: name
+          description: description
+          Day:
+          - null
+          - null
+        isRestricted: true
+        access24Hours: true
+    StandardAvailability:
+      required:
+      - Day;
+      type: object
+      properties:
+        Day:
+          type: array
+          description: Дни и время работы
+          items:
+            $ref: '#/components/schemas/Day'
+      description: Стандартная доступность
+      example:
+        Day:
+        - closingTime: null
+          dayCode: 01 | Понедельник
+          openingTime: 2021-06-05T15:15:13Z
+          BreakTime:
+          - breakFromTime: null
+            breakToTime: null
+          - breakFromTime: null
+            breakToTime: null
+        - closingTime: null
+          dayCode: 01 | Понедельник
+          openingTime: 2021-06-05T15:15:13Z
+          BreakTime:
+          - breakFromTime: null
+            breakToTime: null
+          - breakFromTime: null
+            breakToTime: null
+    NonStandardAvailability:
+      required:
+      - Day;
+      - name;
+      type: object
+      properties:
+        name:
+          type: string
+          description: "Наименование праздничного дня. Например, \"Рождество\", \"\
+            Новый Год\"."
+        fromDate:
+          $ref: '#/components/schemas/ISODateTime'
+        toDate:
+          $ref: '#/components/schemas/ISODateTime'
+        description:
+          type: string
+          description: Дополнительная информация в свободной форме
+        Day:
+          type: array
+          description: Дни и время работы
+          items:
+            $ref: '#/components/schemas/Day'
+      description: Не стандартная доступность
+      example:
+        fromDate: null
+        toDate: null
+        name: name
+        description: description
+        Day:
+        - null
+        - null
+    BreakTime:
+      required:
+      - breakFromTime;
+      - breakToTime;
+      type: object
+      properties:
+        breakFromTime:
+          $ref: '#/components/schemas/ISODateTime'
+        breakToTime:
+          $ref: '#/components/schemas/ISODateTime'
+      description: Информация о перерывах в работе
+      example:
+        breakFromTime: null
+        breakToTime: null
+    Day:
+      required:
+      - BreakTime;
+      - dayCode;
+      type: object
+      properties:
+        dayCode:
+          $ref: '#/components/schemas/WeekDayCode'
+        openingTime:
+          $ref: '#/components/schemas/ISODateTime'
+        closingTime:
+          $ref: '#/components/schemas/ISODateTime'
+        BreakTime:
+          type: array
+          description: Информация о перерывах в работе
+          items:
+            $ref: '#/components/schemas/BreakTime'
+      description: Дни и время работы
+      example:
+        closingTime: null
+        dayCode: 01 | Понедельник
+        openingTime: 2021-06-05T15:15:13Z
+        BreakTime:
+        - breakFromTime: null
+          breakToTime: null
+        - breakFromTime: null
+          breakToTime: null
+    ContactDetails:
+      type: object
+      properties:
+        phoneNumber:
+          pattern: "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$"
+          type: string
+          description: Номер стационарного телефона
+        mobileNumber:
+          pattern: "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$"
+          type: string
+          description: Номер мобильного телефона
+        emailAddress:
+          type: string
+          description: Адрес электронной почты
+        other:
+          maxLength: 128
+          type: string
+          description: Дополнительный текст в свободном формате
+        SocialNetworks:
+          type: array
+          description: Контакты в социальных сетях
+          items:
+            $ref: '#/components/schemas/SocialNetworks'
+      description: Контактная информация
+      example:
+        emailAddress: emailAddress
+        other: other
+        phoneNumber: phoneNumber
+        mobileNumber: mobileNumber
+        SocialNetworks:
+        - networkName: VK | ВКонтакте
+          description: description
+          url: url
+        - networkName: VK | ВКонтакте
+          description: description
+          url: url
+    Accessibilities:
+      required:
+      - Accessibility;
+      type: object
+      properties:
+        Accessibility:
+          type: array
+          description: Информация о доступности дополнительных удобств для инвалидов
+          items:
+            $ref: '#/components/schemas/Accessibility'
+      additionalProperties: false
+      description: Дополнительные удобства.
+      example:
+        Accessibility:
+        - description: description
+          type: Braille | Шрифт Брайля
+        - description: description
+          type: Braille | Шрифт Брайля
+    Accessibility:
+      required:
+      - description;
+      - type;
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/AccessibilityCode'
+        description:
+          maxLength: 255
+          type: string
+          description: Дополнительная информация в свободной форме
+      example:
+        description: description
+        type: Braille | Шрифт Брайля
+    Information:
+      required:
+      - segment
+      type: object
+      properties:
+        segment:
+          $ref: '#/components/schemas/SegmentCode'
+        Availability:
+          $ref: '#/components/schemas/Availability'
+        ContactDetails:
+          type: array
+          description: Контактная информация
+          items:
+            $ref: '#/components/schemas/ContactDetails'
+      description: Информация о работе подразделения
+      example:
+        Availability:
+          StandardAvailability:
+            Day:
+            - closingTime: null
+              dayCode: 01 | Понедельник
+              openingTime: 2021-06-05T15:15:13Z
+              BreakTime:
+              - breakFromTime: null
+                breakToTime: null
+              - breakFromTime: null
+                breakToTime: null
+            - closingTime: null
+              dayCode: 01 | Понедельник
+              openingTime: 2021-06-05T15:15:13Z
+              BreakTime:
+              - breakFromTime: null
+                breakToTime: null
+              - breakFromTime: null
+                breakToTime: null
+          sameAsOrganization: true
+          description: description
+          NonStandardAvailability:
+          - fromDate: null
+            toDate: null
+            name: name
+            description: description
+            Day:
+            - null
+            - null
+          - fromDate: null
+            toDate: null
+            name: name
+            description: description
+            Day:
+            - null
+            - null
+          isRestricted: true
+          access24Hours: true
+        ContactDetails:
+        - emailAddress: emailAddress
+          other: other
+          phoneNumber: phoneNumber
+          mobileNumber: mobileNumber
+          SocialNetworks:
+          - networkName: VK | ВКонтакте
+            description: description
+            url: url
+          - networkName: VK | ВКонтакте
+            description: description
+            url: url
+        - emailAddress: emailAddress
+          other: other
+          phoneNumber: phoneNumber
+          mobileNumber: mobileNumber
+          SocialNetworks:
+          - networkName: VK | ВКонтакте
+            description: description
+            url: url
+          - networkName: VK | ВКонтакте
+            description: description
+            url: url
+        segment: null
+    BranchServices:
+      required:
+      - Service
+      type: object
+      properties:
+        Service:
+          type: array
+          items:
+            $ref: '#/components/schemas/BranchService'
+        CurrencyExchange:
+          type: array
+          description: Подробная информация об обмене валюты
+          items:
+            $ref: '#/components/schemas/CurrencyExchange'
+      additionalProperties: false
+      description: Услуги отделения кредитной организации
+      example:
+        Service:
+        - dateTime: 2021-06-05T15:15:13Z
+          currentStatus: Active | Доступно
+          segment: segment
+          name: name
+          description: description
+          serviceId: serviceId
+          type: Loan | Кредит
+          url: url
+        - dateTime: 2021-06-05T15:15:13Z
+          currentStatus: Active | Доступно
+          segment: segment
+          name: name
+          description: description
+          serviceId: serviceId
+          type: Loan | Кредит
+          url: url
+        CurrencyExchange:
+        - amountMax: 1.4658129
+          scaleCurrency: 1
+          targetCurrency: null
+          exchangeRate: 1
+          amountMin: 6.0274563
+          fee: 0.8008282
+          exchangeType: Online | Онлайн
+          sourceCurrency: null
+          updateDateTime: null
+          quotationDate: null
+          direction: Sell | Кредитная организация продает валюту
+        - amountMax: 1.4658129
+          scaleCurrency: 1
+          targetCurrency: null
+          exchangeRate: 1
+          amountMin: 6.0274563
+          fee: 0.8008282
+          exchangeType: Online | Онлайн
+          sourceCurrency: null
+          updateDateTime: null
+          quotationDate: null
+          direction: Sell | Кредитная организация продает валюту
+    BranchService:
+      required:
+      - dateTime
+      - name
+      - segment
+      - serviceId
+      - type
+      type: object
+      properties:
+        serviceId:
+          maxLength: 40
+          type: string
+          description: "Уникальный и неизменный идентификатор, используемый для ид\
+            ентификации ресурса 'services'"
+        type:
+          $ref: '#/components/schemas/ServiceTypeCode'
+        name:
+          type: string
+          description: Наименование услуги
+        segment:
+          $ref: '#/components/schemas/SegmentCode'
+        dateTime:
+          $ref: '#/components/schemas/ISODateTime'
+        currentStatus:
+          $ref: '#/components/schemas/ServiceCurrentStatusCode'
+        description:
+          type: string
+          description: Дополнительная информация в свободной форме
+        url:
+          type: string
+          description: URL адрес услуги
+      description: Услуга отделения кредитной организации
+      example:
+        dateTime: 2021-06-05T15:15:13Z
+        currentStatus: Active | Доступно
+        segment: segment
+        name: name
+        description: description
+        serviceId: serviceId
+        type: Loan | Кредит
+        url: url
+    SegmentCode:
+      type: string
+      description: Сегмент клиентов
+      enum:
+      - "Business | Юридические лица, индивидуальные предприниматели и лица занима\
+        ющиеся частной практикой"
+      - Individual | Физические лица
+    ServiceCurrentStatusCode:
+      type: string
+      description: Статус доступности услуги
+      enum:
+      - Active | Доступно
+      - Inactive  | Недоступно
+      - Archived | Архив
+    WeekDayCode:
+      type: string
+      description: Дни недели.
+      enum:
+      - 01 | Понедельник
+      - 02 | Вторник
+      - 03 | Среда
+      - 04 | Четверг
+      - 05 | Пятница
+      - 06 | Суббота
+      - 07 | Воскресенье
+    AccessibilityCode:
+      type: string
+      description: Тип оборудования для инвалидов. Справочное значение
+      enum:
+      - Braille | Шрифт Брайля
+      - AudioCashMachine | Голосовое озвучивание
+      - AutomaticDoors | Автоматические двери
+      - WheelchairAccess | Доступность для инвалидных колясок
+      - ExternalRamp | Внешний пандус
+      - InternalRamp | Внутренний пандус
+      - Other | Другие
+    ServiceTypeCode:
+      type: string
+      description: Доступные услуги
+      enum:
+      - Loan | Кредит
+      - Deposit | Депозит
+      - Card | Карта
+      - Transfer | Денежный перевод
+      - Jewel | Драгоценности
+      - CurrencyExchange | Обмен валют
+      - DirectDebit | Прямое дебетование
+      - Other | Другая услуга
+    DeviceServiceTypeCode:
+      type: string
+      description: Услуги доступные на оборудовании.
+      example: CashWithdrawal
+      enum:
+      - CashWithdrawal | Снятие наличных денежных средств
+      - PINChange | Смена ПИН
+      - PINUnblock | Разблокировка ПИН
+      - PINActivation | Активация ПИН
+      - Balance | Просмотр баланса
+      - MiniStatement | Выписка
+      - BillPayments | Платежи
+      - MobileBankingRegistration | Регистрация мобильного банка
+      - CurrencyExhange | Обмен валют
+      - CashIn | Пополнение наличными денежными средствами
+      - Other | Другие
+    ProductType:
+      type: string
+      description: Тип продукта
+      example: loanIndividual
+      enum:
+      - depositIndividual | Депозит физического лица
+      - depositlegalEntity | Депозит юридического лица
+      - CAindividual | Текущий счет физического лица
+      - CALegalEntity | Расчетный счет юридического лица
+      - debitCard | Дебетовая карта
+      - creditCard | Кредитная карта
+      - loanCar | Автокредит
+      - loanIndividual | Кредит физическому лицу
+      - loanLegalEntity | Кредит юридического лица
+      - mortage | Ипотека
+      - investment | Инвестиционный продукт
+      - Other | Другой продукт
+    Product:
+      required:
+      - ProductDetails
+      - productId
+      - productName
+      - productType
+      type: object
+      properties:
+        productId:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: "Уникальный идентификатор, присвоенный финансовым учреждени\
+            ем внутри компании каждому из банковских  продуктов"
+          example: 022eaab4-568b-4635-a5fb-fe91153e6cd6
+        productName:
+          maxLength: 350
+          minLength: 1
+          type: string
+          description: "Название продукта, используемого в маркетинговых целях"
+          example: МойПродукт
+        productType:
+          $ref: '#/components/schemas/ProductType'
+        productVersion:
+          pattern: "^[1-9]\\d*(\\.[1-9]\\d*)*$"
+          type: string
+          description: Версия продукта
+        Brand:
+          $ref: '#/components/schemas/Brand'
+        ProductDetails:
+          $ref: '#/components/schemas/ProductDetails'
+        DebitInterest:
+          $ref: '#/components/schemas/DebitInterest'
+        CreditInterest:
+          $ref: '#/components/schemas/CreditInterest'
+        Overdraft:
+          $ref: '#/components/schemas/Overdraft'
+        Repayment:
+          $ref: '#/components/schemas/Repayment'
+        OtherFeesCharges:
+          type: array
+          description: "Информация о комиссиях и сборах, в том числе по тарифу обс\
+            луживания"
+          items:
+            $ref: '#/components/schemas/OtherFeesCharges'
+        SupplementaryData:
+          $ref: '#/components/schemas/SupplementaryData'
+      description: "Общая информация о продукте кредитной организации, его характе\
+        ристиках, зависимостях от уровней процентных ставок, условиях приобретения\
+        . Объект детально определяет, какие могут быть начисления, списания, комис\
+        сии и сборы, а также применяемые при этом ограничения для каждого уровня п\
+        роцентных ставок."
+    ProductList:
+      required:
+      - productId
+      - productName
+      - productType
+      type: object
+      properties:
+        productId:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: "Уникальный идентификатор, присвоенный финансовым  учрежден\
+            ием внутри компании каждому из банковских  продуктов"
+          example: 022eaab4-568b-4635-a5fb-fe91153e6cd6
+        productName:
+          maxLength: 350
+          minLength: 1
+          type: string
+          description: "Название продукта, используемого в маркетинговых  целях (с\
+            \ точки зрения клиента)"
+          example: МойПродукт
+        productType:
+          $ref: '#/components/schemas/ProductType'
+        Brand:
+          $ref: '#/components/schemas/Brand'
+      description: Сведения о продукте
+    Brand:
+      required:
+      - applicationUri
+      - brandName
+      type: object
+      properties:
+        brandName:
+          maxLength: 140
+          minLength: 1
+          type: string
+          description: "Наименование собственного брэнда продукта или брэнд органи\
+            зации, который используется для продвижения продукта"
+          example: МойБанкГрупп
+        applicationUri:
+          maxLength: 2048
+          type: string
+          description: URL-адрес для получения информации об условиях приобретения
+            продукта
+          example: https://mybank.ru/products/credit-card/applay
+      description: Торговая марка продукта
+    ProductsResponse:
+      required:
+      - Data
+      type: object
+      properties:
+        Data:
+          $ref: '#/components/schemas/ProductsResponse_Data'
+        Links:
+          $ref: '#/components/schemas/Links'
+        Meta:
+          $ref: '#/components/schemas/Meta'
+      description: Подробная информация о банковском продукте
+    ProductListResponse:
+      required:
+      - Data
+      type: object
+      properties:
+        Data:
+          $ref: '#/components/schemas/ProductListResponse_Data'
+        Links:
+          $ref: '#/components/schemas/Links'
+        Meta:
+          $ref: '#/components/schemas/Meta'
+      additionalProperties: false
+      description: Список доступных банковских продуктов
+    PeriodUnit:
+      type: string
+      description: Единица измерения периода
+      example: Месяц
+      enum:
+      - Hour | Час
+      - Day | День
+      - Week | Неделя
+      - Month | Месяц
+      - Quarter | Квартал
+      - HalfYear | Полугодие
+      - Year | Год
+      - AcademicTerm | Академическая единица
+    ProductDetails:
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: Признак активности продукта
+        activeFrom:
+          $ref: '#/components/schemas/ISODateTime'
+        activeTo:
+          $ref: '#/components/schemas/ISODateTime'
+        feeFreeLength:
+          type: integer
+          description: Продолжительность бесплатного или рекламного периода
+          example: 3
+        feeFreeLengthPeriod:
+          $ref: '#/components/schemas/PeriodUnit'
+        productInsurance:
+          type: boolean
+          description: Обязательность страхования продукта или залогового имущества
+          example: true
+        DeliveryRegions:
+          type: array
+          description: Информация о доступности продукта и возможности доставки
+          items:
+            $ref: '#/components/schemas/DeliveryRegions'
+        FeatureAndBenefit:
+          $ref: '#/components/schemas/FeatureAndBenefit'
+        Eligibility:
+          type: array
+          description: Ограничения на продукт в целом
+          items:
+            $ref: '#/components/schemas/Eligibility'
+        Insurances:
+          $ref: '#/components/schemas/Insurances'
+        comments:
+          $ref: '#/components/schemas/Comments'
+      description: Детальное описание информации о продукте
+    TierBandMethod:
+      type: string
+      description: Виды процентной ставки.
+      example: Tiered
+      enum:
+      - "Floated | Плавающая процентная ставка, подлежит периодическому пересмотру\
+        \ по мере изменения остатка / задолженности"
+      - "Tiered | Многоуровневая процентная ставка, определяет фиксированное значе\
+        ния процентов для определенного уровня / диапазона остатка / задолженности"
+      - "Fixed | Фиксированная процентная ставка, подразумевает неизменную на прот\
+        яжении всего периода соглашения процентную величину"
+    InterestCalculationMethod:
+      type: string
+      description: Варианты начисления процентов (капитализация)
+      example: SimpleInterest
+      enum:
+      - SimpleInterest | Простые проценты
+      - Compound | Сложные проценты
+    ActiveCurrencyAndAmountSimpleType:
+      pattern: "^\\d{1,13}\\.\\d{2}"
+      type: string
+      description: Сумма денежных средств
+      example: "200.00"
+    Rate:
+      pattern: "^(-?\\d{1,3}){1}(\\.\\d{1,4}){0,1}$"
+      type: string
+      description: Процентная ставка
+      example: "5"
+    FeeTypeCode:
+      type: string
+      description: Типы комиссии
+      example: transferOfFunds
+      enum:
+      - transferOfFunds | при переводе денежных средств
+      - withdrawingMoneyFromAnATM | во время снятия в банкомате
+      - countingBanknotes | при пересчете купюр
+      - currencyConversion | во время конвертации валют
+      - factoringService | за услугу факторинга
+      - issuingLoans | при выдаче кредитов
+      - earlyRepaymentOfTheLoan | по досрочному погашению
+      - considerationOfAnApplicationForALoan | рассмотрения заявки на получение кредита
+      - consultationsOnMortages | консультации по ипотекам
+      - consultationsOnInvesting | консультации по ивестпродуктам
+      - openingAccount | по открытию счета
+      - smsNotificating | СМС оповещения
+      - сommissionBroker | Вознаграждение Брокера за исполнение Приказов Клиента на
+        фондовом рынке
+      - marginLending | При маржинальном кредитовании и переносе непокрытых позиций
+        Клиента
+    FrequencyType:
+      type: string
+      description: Частота применения в периоде времени
+      example: Monthly
+      enum:
+      - Daily | Ежедневно
+      - Weekly | Еженедельно
+      - Monthly | Ежемесячно
+      - Quarterly | Поквартально
+      - Yearly | Ежегодно
+      - PerOccurrence | По возникновению события
+      - Other | Другое
+    OtherTypeCode:
+      required:
+      - description
+      - name
+      type: object
+      properties:
+        code:
+          maxLength: 35
+          minLength: 0
+          type: string
+          description: Код идентификации объекта или краткое наименование
+        name:
+          maxLength: 70
+          minLength: 1
+          type: string
+          description: "Наименование, асоциировоннае с кодом"
+        description:
+          maxLength: 350
+          minLength: 1
+          type: string
+          description: Описание применения кода
+      additionalProperties: false
+      description: Другой тип объекта
+    FeeChargeDetail:
+      required:
+      - calculationFrequency
+      - feeType
+      type: object
+      properties:
+        feeType:
+          $ref: '#/components/schemas/FeeTypeCode'
+        OtherFeeType:
+          $ref: '#/components/schemas/OtherTypeCode'
+        feeAmount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        feeRate:
+          $ref: '#/components/schemas/Rate'
+        feeRateType:
+          $ref: '#/components/schemas/InterestRateType'
+        OtherFeeRateType:
+          $ref: '#/components/schemas/OtherTypeCode'
+        applicationFrequency:
+          $ref: '#/components/schemas/FrequencyType'
+        OtherApplicationFrequency:
+          $ref: '#/components/schemas/OtherTypeCode'
+        calculationFrequency:
+          $ref: '#/components/schemas/FrequencyType'
+        OtherCalculationFrequency:
+          $ref: '#/components/schemas/OtherTypeCode'
+        FeeApplicableRange:
+          $ref: '#/components/schemas/FeeApplicableRange'
+        comments:
+          $ref: '#/components/schemas/Comments'
+      description: "Подробная информация о комиссиях, сборах, пени и штрафах"
+    FeeChargeCap:
+      required:
+      - minMaxType
+      type: object
+      properties:
+        feeType:
+          $ref: '#/components/schemas/FeeTypeCode'
+        minMaxType:
+          type: string
+          description: Указывает минимальная или максимальная комиссия
+          enum:
+          - Minimum
+          - Maximum
+        feeCapOccurrence:
+          type: integer
+          description: "Комиссия / сборы / пени / штрафы фиксируются в зависимости\
+            \ от количества случаев, а не ограничиваются определенной суммой"
+        feeCapAmount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        cappingPeriod:
+          $ref: '#/components/schemas/PeriodUnit'
+        comments:
+          $ref: '#/components/schemas/Comments'
+      description: "Подробная информация о любых ограничениях (минимальных / макси\
+        мальных сборах), которые применяются к конкретной комиссии / сбору / пени\
+        \ / штрафу"
+    InterestFeesCharges:
+      required:
+      - FeeChargeDetail
+      type: object
+      properties:
+        FeeChargeDetail:
+          type: array
+          description: "Подробная информация о комиссиях, сборах, пени и штрафах"
+          items:
+            $ref: '#/components/schemas/FeeChargeDetail'
+        FeeChargeCap:
+          type: array
+          description: "Подробная информация о любых ограничениях  (минимальных /\
+            \ максимальных ), которые  применяются к конкретной комиссии / сбору /\
+            \ пени / штрафы"
+          items:
+            $ref: '#/components/schemas/FeeChargeCap'
+      description: "Информация о комиссиях, сборах, пени и штрафах"
+    InterestRateType:
+      type: string
+      description: "Типы процентных ставок, кроме базовых годовых, которые финансо\
+        вые учреждения могут использовать для описания годовой процентной ставки \""
+      example: INBR
+      enum:
+      - "INBR | Процентная ставка, связанная с процентной ставкой ЦБ РФ"
+      - INFR | Фиксированная процентная ставка
+      - INGR | Процентная ставка без учета налоговых выплат
+      - INLR | Базовая процентная ставка поставщика кредита
+      - INNE | Процентная ставка с учетом налоговых выплат
+      - INOT | Другой тип процентной ставки
+    DebitInterestTierBand:
+      required:
+      - AER
+      - minTermPeriod
+      - tierValueMinTerm
+      - tierValueMinimum
+      type: object
+      properties:
+        AER:
+          $ref: '#/components/schemas/Rate'
+        comments:
+          $ref: '#/components/schemas/Comments'
+        identification:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: Уникальное определение диапазона уровней процентной ставки
+            для кредита
+          example: ₽1000-₽5000
+        tierCurrency:
+          description: Валюта уровня
+        tierValueMinimum:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        tierValueMaximum:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        tierValueMinTerm:
+          type: integer
+          description: "Минимальный срок, на которой применяется уровень процентно\
+            й ставки"
+          example: 1
+        minTermPeriod:
+          $ref: '#/components/schemas/PeriodUnit'
+        tierValueMaxTerm:
+          type: integer
+          description: "Максимальный срок, для которой применяется уровень процент\
+            ной ставки"
+          example: 10
+        maxTermPeriod:
+          $ref: '#/components/schemas/PeriodUnit'
+        interestRate:
+          $ref: '#/components/schemas/Rate'
+        interestRateType:
+          $ref: '#/components/schemas/InterestRateType'
+        InterestFeesCharges:
+          type: array
+          description: Информация о комиссиях и сборах
+          items:
+            $ref: '#/components/schemas/InterestFeesCharges'
+      description: Подробная информация о процентной ставке по кредиту
+    DebitInterestTierBandSet:
+      required:
+      - DebitInterestTierBand
+      - calculationMethod
+      - tierBandMethod
+      type: object
+      properties:
+        identification:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: Идентификатор группы уровня процентной ставки
+          example: 01a001
+        tierBandMethod:
+          $ref: '#/components/schemas/TierBandMethod'
+        calculationMethod:
+          $ref: '#/components/schemas/InterestCalculationMethod'
+        comments:
+          $ref: '#/components/schemas/Comments'
+        DebitInterestTierBand:
+          minItems: 1
+          type: array
+          description: Подробная информация о процентной ставке по кредиту
+          items:
+            $ref: '#/components/schemas/DebitInterestTierBand'
+        TierBandSetEligibility:
+          type: array
+          description: Ограничения на группу начисления процентов
+          items:
+            $ref: '#/components/schemas/Eligibility'
+        InterestFeesCharges:
+          type: array
+          description: "Информация о комиссиях и сборах, которые связаны со всей г\
+            руппой уровня процентной ставки"
+          items:
+            $ref: '#/components/schemas/InterestFeesCharges'
+      description: Группа уровней или диапазонов процентной ставки для выплат по кредиту
+    DebitInterest:
+      required:
+      - DebitInterestTierBandSet
+      type: object
+      properties:
+        comments:
+          $ref: '#/components/schemas/Comments'
+        DebitInterestTierBandSet:
+          minItems: 1
+          type: array
+          description: Группа уровней или диапазонов процентной ставки для выплат
+            по кредиту
+          items:
+            $ref: '#/components/schemas/DebitInterestTierBandSet'
+      description: Подробная информация о процентных ставках для кредитных продуктов
+    TypesTransport:
+      type: string
+      description: Тип транспортного средства
+      enum:
+      - Car | Легковой автомобиль
+      - Truck | Грузовой автомобиль
+      - Bus | Автобус
+      - Mototechnics | Мототехника
+      - Boats and yachts | Катера и яхты
+      - Snowmobiles | Снегоходы
+      - Other | Другие транспортные стредства
+    FeeApplicableRange:
+      type: object
+      properties:
+        minimumAmount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        maximumAmount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        minimumRate:
+          $ref: '#/components/schemas/Rate'
+        maximumRate:
+          $ref: '#/components/schemas/Rate'
+      additionalProperties: false
+      description: "Диапазон суммы или ставки,  для которых применяется комиссия /\
+        \ сбор / пени / штраф"
+    OtherFeesCharges:
+      required:
+      - FeeChargeDetail
+      type: object
+      properties:
+        tariffName:
+          maxLength: 350
+          minLength: 1
+          type: string
+          description: Название тарифа
+          example: Лучший тариф
+        FeeChargeDetail:
+          type: array
+          description: "Подробная информация о комиссиях, сборах, пени и штрафах"
+          items:
+            $ref: '#/components/schemas/FeeChargeDetail'
+        FeeChargeCap:
+          type: array
+          description: "Подробная информация о любых ограничениях (минимальных / м\
+            аксимальных сборах), которые применяются к конкретной комиссии / сбору\
+            \ / пени / штрафу"
+          items:
+            $ref: '#/components/schemas/FeeChargeCap'
+        comments:
+          $ref: '#/components/schemas/Comments'
+      additionalProperties: false
+      description: "Информация о комиссиях и сборах, в том числе по тарифу обслужи\
+        вания"
+    CountryCode:
+      pattern: "^[A-Z]{2,2}"
+      type: string
+      description: Код страны
+      example: RU
+    DeliveryRegions:
+      type: object
+      properties:
+        comments:
+          $ref: '#/components/schemas/Comments'
+        DeliveryRegionAndAddress:
+          type: array
+          description: "Информация о населенном пункте, где продукт доступен либо\
+            \ куда возможна доставка"
+          items:
+            $ref: '#/components/schemas/PostalAddressAndAdmZone'
+      description: Информация о доступности продукта и возможности доставки
+    PostalAddressAndAdmZone:
+      type: object
+      properties:
+        administrationZone:
+          maxLength: 11
+          pattern: "^\\d{1,11}$"
+          type: string
+          description: Код по Общероссийскому классификатору территорий муниципальных
+            образований ОКТМО
+          example: "45388000"
+        PostalAddress:
+          $ref: '#/components/schemas/PostalAddress'
+      description: "Информация о населенном пункте, где продукт доступен либо куда\
+        \ возможна доставка"
+      example:
+        PostalAddress:
+          country: RU
+          streetName: Садовая
+          townName: Бигсити
+          countrySubDivision: Мой край
+          addressType: DeliveryTo
+          buildingNumber: "11"
+          postCode: "0100010"
+          addressLine:
+          - addressLine
+          - addressLine
+        administrationZone: "45388000"
+    SupplementaryData:
+      type: object
+      properties: {}
+      additionalProperties: true
+      description: "Дополнительная информация, которая не может быть записана в ст\
+        руктурированных полях и/или любом другом конкретном блоке. Представляет со\
+        бой JSON объект, схема которого согласуется между участниками взаимодейств\
+        ия и публикуется на портале ППД"
+    TierBandMethodDestination:
+      type: string
+      description: "Описывает, подлежат ли начисленные проценты зачислению на теку\
+        щий счет или должны быть начислены на другой банковский счет."
+      enum:
+      - CurrentAccount | на текущий счет
+      - AnotherAccount | на другой счет
+    TierBand:
+      required:
+      - AER
+      - applicationFrequency
+      - tierValueMinimum
+      type: object
+      properties:
+        AER:
+          $ref: '#/components/schemas/Rate'
+        comments:
+          $ref: '#/components/schemas/Comments'
+        identification:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: Уникальная и однозначная идентификация диапазона уровней процентной
+            ставки
+          example: ₽1000-₽5000
+        tierCurrency:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyCode'
+        interestRate:
+          $ref: '#/components/schemas/Rate'
+        tierValueMinimum:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        tierValueMaximum:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        tierPrimaryValueMinimum:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        tierPrimaryValueMaximum:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        tierRemainValueMinimum:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        tierValueMinTerm:
+          type: integer
+          description: "Минимальный срок, на которой применяется уровень процентно\
+            й ставки"
+          example: 1
+        minTermPeriod:
+          $ref: '#/components/schemas/PeriodUnit'
+        tierValueMaxTerm:
+          type: integer
+          description: "Максимальный срок, для которой применяется уровень процент\
+            ной ставки"
+          example: 10
+        maxTermPeriod:
+          $ref: '#/components/schemas/PeriodUnit'
+        applicationFrequency:
+          $ref: '#/components/schemas/FrequencyType'
+        OtherApplicationFrequency:
+          $ref: '#/components/schemas/OtherTypeCode'
+        calculationFrequency:
+          $ref: '#/components/schemas/FrequencyType'
+        OtherCalculationFrequency:
+          $ref: '#/components/schemas/OtherTypeCode'
+        InterestFeesCharges:
+          type: array
+          description: Информация о комиссиях и сборах
+          items:
+            $ref: '#/components/schemas/InterestFeesCharges'
+      description: Подробная информация об уровнях процентной ставки
+    TierBandSet:
+      required:
+      - TierBand
+      - destination
+      - tierBandMethod
+      type: object
+      properties:
+        tierBandMethod:
+          $ref: '#/components/schemas/TierBandMethod'
+        calculationMethod:
+          $ref: '#/components/schemas/InterestCalculationMethod'
+        OtherCalculationMethod:
+          $ref: '#/components/schemas/OtherTypeCode'
+        destination:
+          $ref: '#/components/schemas/TierBandMethodDestination'
+        comments:
+          $ref: '#/components/schemas/Comments'
+        TierBandSetEligibility:
+          type: array
+          description: Ограничения на группу начисления процентов
+          items:
+            $ref: '#/components/schemas/Eligibility'
+        TierBand:
+          minItems: 1
+          type: array
+          description: Подробная информация об уровнях процентной ставки
+          items:
+            $ref: '#/components/schemas/TierBand'
+      description: Группа описания начисления процентов
+    CreditInterest:
+      required:
+      - TierBandSet
+      type: object
+      properties:
+        comments:
+          $ref: '#/components/schemas/Comments'
+        TierBandSet:
+          minItems: 1
+          type: array
+          description: Группа описания начисления процентов
+          items:
+            $ref: '#/components/schemas/TierBandSet'
+      description: Подробная информация о процентных ставках для дебетовых продуктов
+    OverdraftType:
+      type: string
+      description: Тип овердрафта
+      enum:
+      - salaryOverdraft | Овердрафт зарплатный
+      - standardOverdraft | Овердрафт стандартный
+      - overdraftInAdvance | Овердрафт авансом
+      - overdraftForCollection | Овердрафт под инкассацию
+      - technicalOverdraft | Овердрафт технический
+      - overdraftForIndividuals | Овердрафт для физических лиц
+      - creditCardOverdraft | Овердрафт по кредитной карте
+      - otherOverdraft | Другой тип овердрафта
+    OverdraftFeeType:
+      type: string
+      description: Комиссии за овердрафт
+      enum:
+      - connectingOverdraft | Подключение овердрафта
+      - extensionOverdraft | Продление овердрафта
+      - unauthorizedOverdraft | Технический (несанкционированный) овердрафт
+    OverdraftFeeChargeDetail:
+      required:
+      - applicationFrequency
+      - feeType
+      type: object
+      properties:
+        feeType:
+          $ref: '#/components/schemas/OverdraftFeeType'
+        OtherFeeType:
+          $ref: '#/components/schemas/OtherTypeCode'
+        feeAmount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        feeRate:
+          $ref: '#/components/schemas/Rate'
+        feeRateType:
+          $ref: '#/components/schemas/InterestRateType'
+        OtherFeeRateType:
+          $ref: '#/components/schemas/OtherTypeCode'
+        applicationFrequency:
+          $ref: '#/components/schemas/FrequencyType'
+        OtherApplicationFrequency:
+          $ref: '#/components/schemas/OtherTypeCode'
+        calculationFrequency:
+          $ref: '#/components/schemas/FrequencyType'
+        OtherCalculationFrequency:
+          $ref: '#/components/schemas/OtherTypeCode'
+        incrementalBorrowingAmount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        negotiableIndicator:
+          type: boolean
+          description: "Указывает, являются ли комиссии и сборы договорными"
+        comments:
+          $ref: '#/components/schemas/Comments'
+        FeeChargeCap:
+          type: array
+          description: "Подробная информация о любых ограничениях (минимальных / м\
+            аксимальных сборах), которые применяются к конкретной комиссии / сбору\
+            \ / пени / штрафу"
+          items:
+            $ref: '#/components/schemas/FeeChargeCap'
+      description: Подробная информация о комиссиях и сборах
+    OverdraftFeesCharges:
+      required:
+      - OverdraftFeeChargeDetail
+      type: object
+      properties:
+        OverdraftFeeChargeCap:
+          type: array
+          description: "Подробная информация о любых ограничениях (минимальных / м\
+            аксимальных сборах), которые применяются к конкретной комиссии / сбору\
+            \ / пени / штрафу"
+          items:
+            $ref: '#/components/schemas/FeeChargeCap'
+        OverdraftFeeChargeDetail:
+          type: array
+          description: Подробная информация о комиссиях и сборах
+          items:
+            $ref: '#/components/schemas/OverdraftFeeChargeDetail'
+      description: Детали комиссии и сборов за овердрафт
+    OverdraftTierBand:
+      required:
+      - tierValueMin
+      type: object
+      properties:
+        EAR:
+          $ref: '#/components/schemas/Rate'
+        comments:
+          $ref: '#/components/schemas/Comments'
+        identification:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: Уникальное и однозначное определение уровня или диапазона процентных
+            ставок
+          example: ₽1000-₽5000
+        tierCurrency:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyCode'
+        tierValueMin:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        tierValueMax:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        agreementLengthMin:
+          type: integer
+          description: Минимальное значение диапазона соглашения об овердрафте
+          example: 1
+        agreementLengthMax:
+          type: integer
+          description: Максимальное значение диапазона соглашения об овердрафте
+          example: 10000
+        agreementPeriod:
+          $ref: '#/components/schemas/PeriodUnit'
+        overdraftInterestChargingCoverage:
+          $ref: '#/components/schemas/TierBandMethod'
+        bankGuaranteedIndicator:
+          type: boolean
+          description: "Указывает, гарантированно ли заявленная ставка овердрафта\
+            \ будет предложена заемщику банком, например если это часть государств\
+            енной программы или может ли ставка варьироваться в зависимости от обс\
+            тоятельств заявителя"
+          example: true
+        OverdraftFeesCharges:
+          type: array
+          description: Детали комиссии и сборов за овердрафт
+          items:
+            $ref: '#/components/schemas/OverdraftFeesCharges'
+      description: Подробная информация об уровнях процентной ставки по овердрафту
+    OverdraftTierBandSet:
+      required:
+      - OverdraftTierBand
+      - tierBandMethod
+      type: object
+      properties:
+        identification:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: Уникальный идентификатор уровня процентных ставок для овердрафта
+          example: ₽1000-₽5000
+        tierBandMethod:
+          $ref: '#/components/schemas/TierBandMethod'
+        overdraftType:
+          $ref: '#/components/schemas/OverdraftType'
+        authorisedIndicator:
+          type: boolean
+          description: Необходимость авторизации | true - требуется авторизовать овердрафт;
+            \n | false - не требуется авторизация.
+          example: true
+        bufferAmount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        comments:
+          $ref: '#/components/schemas/Comments'
+        OverdraftTierBand:
+          minItems: 1
+          type: array
+          description: Подробная информация об уровнях процентной ставки по овердрафту
+          items:
+            $ref: '#/components/schemas/OverdraftTierBand'
+        OverdraftFeesCharges:
+          type: array
+          description: Детали комиссии и сборов за овердрафт
+          items:
+            $ref: '#/components/schemas/OverdraftFeesCharges'
+      description: Подробная информация о процентных ставках по овердрафту
+    Overdraft:
+      required:
+      - OverdraftTierBandSet
+      type: object
+      properties:
+        comments:
+          $ref: '#/components/schemas/Comments'
+        OverdraftTierBandSet:
+          type: array
+          description: Подробная информация о процентных ставках по овердрафту
+          items:
+            $ref: '#/components/schemas/OverdraftTierBandSet'
+      description: Подробная информация о процентных ставках по овердрафту
+    EligibilityType:
+      title: Type
+      type: string
+      description: "тип соответствия - метод, с помощью которого группируются прав\
+        а на участие в целях сравнения"
+      enum:
+      - NewCustomersOnly | Продукт доступен только новым клиентам
+      - MinimumAge | Минимальный возраст для получения продукта
+      - MaximumAge | Максимальный возраст для получения продукта
+      - BusinessOnly | Только для малоо и среднего бизнеса
+      - CreditScoring | Для прошедших кредитных скоринг
+      - ExistingCustomers | Для клиентов кредитной организации
+      - IdAndV | Для идентифицированных клиентов
+      - Mortgage | Клиент должен иметь ипотеку в кредитной организации
+      - "NoArrearsOnLoan | Продукт недоступен для клиента, имеющего задолженность\
+        \ по кредиту"
+      - NoCustomerInArrears | Продукт недоступен для клиента с какой-либо просроченной
+        задолженностью
+      - Other | Использовать OtherEligibilityType для любых не охваченных критериев
+        соответствия
+      - StartUp | На открытие малого и среднего бизнесо
+      - Turnover | Ограничено по уровню оборота компании
+      - MinimumBalanceAmont | По минимальной сумме остатка
+      - MinimumTotalDebit | По минимальной сумме списания
+      - MinimumTotalCredit | По минимальной сумме начисления
+    Eligibility:
+      required:
+      - name
+      - type
+      type: object
+      properties:
+        name:
+          title: Name
+          maxLength: 350
+          minLength: 1
+          type: string
+          description: "Наименование, указанное для критериев приемлемости"
+        description:
+          maxLength: 500
+          minLength: 1
+          type: string
+          description: Полное описание критериев приемлемости
+        type:
+          $ref: '#/components/schemas/EligibilityType'
+        comments:
+          $ref: '#/components/schemas/Comments'
+        amount:
+          title: Amount
+          pattern: "^(-?\\d{1,14}){1}(\\.\\d{1,4}){0,1}$"
+          type: string
+          description: "Любые критерии приемлемости, требующие указания суммы или\
+            \ числа, например Минимальный возраст."
+        indicator:
+          title: Indicator
+          type: boolean
+          description: "Любые критерии приемлемости, при которых значение может бы\
+            ть указано истинным или ложным значением. Резидент РФ - правда или лож\
+            ь"
+        textual:
+          title: Textual
+          maxLength: 500
+          minLength: 1
+          type: string
+          description: Любые критерии приемлемости с подробным описанием
+        period:
+          $ref: '#/components/schemas/PeriodUnit'
+        OtherEligibilityType:
+          $ref: '#/components/schemas/OtherTypeCode'
+      additionalProperties: false
+      description: Критерии приемлемости
+    FeatureAndBenefitItem:
+      required:
+      - type
+      type: object
+      properties:
+        identification:
+          title: Identification
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: Уникальная идентификация программы или преимущества
+        type:
+          maxLength: 25
+          type: string
+          description: Общепринятые типы программам и преимуществ в виде кода (справочные
+            значения определяются ППД и публикуются на его портале)
+          example: EarlySettlement
+        name:
+          maxLength: 70
+          minLength: 1
+          type: string
+          description: Наименование группы программам и преимуществ
+          example: Возможность досрочного погашения
+        comments:
+          $ref: '#/components/schemas/Comments'
+        amount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        indicator:
+          type: boolean
+          description: "Индикатор true / false для конкретной функции программы /\
+            \ преимущества, например. Беспроцентный период (Да) или (Нет)"
+        textual:
+          title: Textual
+          maxLength: 500
+          minLength: 1
+          type: string
+          description: "Предоставляет текстовую информацию о функции / преимуществ\
+            ах, например Скидка 10% на билеты в кино по вторникам вечером"
+          example: Скидка 10% на билеты в кино по вторникам вечером
+        OtherType:
+          $ref: '#/components/schemas/OtherTypeCode'
+        FeatureBenefitEligibility:
+          type: array
+          description: Ограничение на участие в программе и преимуществах
+          items:
+            $ref: '#/components/schemas/Eligibility'
+      additionalProperties: false
+      description: "Характеристики, связанные с программами и преимуществами"
+    FeatureAndBenefitGroup:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          maxLength: 70
+          minLength: 1
+          type: string
+          description: Наименование группы программам и преимуществ
+          example: Возможность досрочного погашения
+        type:
+          maxLength: 25
+          type: string
+          description: Общепринятые типы программам и преимуществ в виде кода (справочные
+            значения определяются ППД и публикуются на его портале)
+          example: EarlySettlement
+        comments:
+          $ref: '#/components/schemas/Comments'
+        BenefitGroupNominalValue:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        fee:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmountSimpleType'
+        applicationFrequency:
+          $ref: '#/components/schemas/FrequencyType'
+        OtherApplicationFrequency:
+          $ref: '#/components/schemas/OtherTypeCode'
+        calculationFrequency:
+          $ref: '#/components/schemas/FrequencyType'
+        OtherCalculationFrequency:
+          $ref: '#/components/schemas/OtherTypeCode'
+        OtherType:
+          $ref: '#/components/schemas/OtherTypeCode'
+        FeatureAndBenefitItem:
+          type: array
+          description: "Характеристики, связанные с программами и преимуществами"
+          items:
+            $ref: '#/components/schemas/FeatureAndBenefitItem'
+        FeatureBenefitEligibility:
+          type: array
+          description: Ограничение на участие в программе и преимуществах
+          items:
+            $ref: '#/components/schemas/Eligibility'
+      additionalProperties: false
+      description: "Группа элементов, описывающих программы и преимущества"
+    FeatureAndBenefit:
+      type: object
+      properties:
+        FeatureAndBenefitGroup:
+          type: array
+          description: "Группа элементов, описывающих программы и преимущества"
+          items:
+            $ref: '#/components/schemas/FeatureAndBenefitGroup'
+        FeatureAndBenefitItem:
+          type: array
+          description: "Характеристики, связанные с программами и преимуществами"
+          items:
+            $ref: '#/components/schemas/FeatureAndBenefitItem'
+      description: Информация об программах и преимуществах продукта или тарифа
+    RepaymentTypeCode:
+      type: string
+      description: "Схема погашения кредитного продукта (Аннуитет, Платежи равными\
+        \ долями, Дифференцированный платеж)"
+      enum:
+      - "FixedCapitalFullyAmortising | Фиксированная сумма платежа, полностью выпл\
+        ачивающая переменное разделение капитала и процентов до даты погашения."
+      - "Balloon | Погашение, при котором только часть основного остатка по кредит\
+        ам амортизируется в течение срока, оставшийся остаток подлежит погашению в\
+        \ конце срока"
+      - "Bullet | Погашение, при котором вся сумма кредита выплачивается при насту\
+        плении срока погашения"
+      - "CapitalAndInterest | Погашение капитала и процентов, при котором кредит п\
+        олностью амортизируется в течение срока платежа"
+      - CustomSchedule | Погашение определяется пользователем в индивидуальные сроки
+        и не обязательно является периодическим
+      - EarlyRepayment | Досрочное погашение полной суммы кредита до согласованного
+        срока погашения
+      - FixedCapitalWithBullet | Фиксированная сумма платежа с переменным разделением
+        капитала и процентов с последним погашением остатка в конце.
+      - FixedCapitalAndInterestReducingBalance | Фиксированная сумма платежа с разделением
+        капитала и процентов в определенное время. В конце может остаться сумма для
+        погашения.
+      - InterestOnly | Переменная сумма платежа с выплатой процентов только по кредиту
+        с последним погашением в конце.
+      - "Other\t| Другой тип погашения"
+      - PrepaymentFee | Переплата или возврат
+      - RepaymentWithBullet | Периодическое погашение с выплатой комбинации капитала
+        и процентов с последним погашением в конце.
+      - "StraightLineInterestOnly | Переменная сумма платежа, выплачивающая фиксир\
+        ованную процентную ставку по ссудес последним погашением в конце."
+    AmountTypeCode:
+      type: string
+      description: "Схема погашения кредитного продукта (Аннуитет, Платежи равными\
+        \ долями, Дифференцированный платеж)"
+      enum:
+      - "Balloon\t| Погашение по графику единовременных выплат в определенный моме\
+        нт срока"
+      - "BalanceToDate | Весь оставшийся остаток по кредиту, включая проценты, ком\
+        иссионные и сборы"
+      - "CapitalAndInterest\t| Погашение включает капитал, проценты и комиссионные\
+        \ сборы"
+      - "FeeChargeCap\t| Погашение включает только комиссии и сборы"
+      - "InterestOnly\t| Погашение включает проценты и комиссионные сборы"
+      - "Bullet\t| Погашение по концу срока"
+      - "Other\t| Другой тип погашения"
+    Repayment:
+      type: object
+      properties:
+        repaymentType:
+          $ref: '#/components/schemas/RepaymentTypeCode'
+        comments:
+          $ref: '#/components/schemas/Comments'
+        repaymentFrequency:
+          $ref: '#/components/schemas/FrequencyType'
+        amountType:
+          $ref: '#/components/schemas/AmountTypeCode'
+        PaymentDate:
+          $ref: '#/components/schemas/PaymentDate'
+        OtherRepaymentType:
+          $ref: '#/components/schemas/OtherTypeCode'
+        OtherRepaymentFrequency:
+          $ref: '#/components/schemas/OtherTypeCode'
+        OtherAmountType:
+          $ref: '#/components/schemas/OtherTypeCode'
+        RepaymentFeeCharges:
+          type: array
+          description: "Применимая комиссия / сборы за погашение, такие как предоп\
+            лата, полное досрочное погашение или невыплата"
+          items:
+            $ref: '#/components/schemas/InterestFeesCharges'
+        RepaymentFeeChargeDetail:
+          required:
+          - RepaymentFeeChargeDetail
+          type: array
+          description: "Подробная информация о комиссиях, сборах, пени и штрафах"
+          items:
+            $ref: '#/components/schemas/FeeChargeDetail'
+      description: Информация о погашениях и выплатах по продуктам
+    OBRUErrorResponseErrorCode:
+      type: string
+      description: Низкоуровневое текстовое описание ошибки
+      x-namespaced-enum:
+      - RU.SBRF.Field.Expected
+      - RU.SBRF.Field.Invalid
+      - RU.SBRF.Field.InvalidDate
+      - RU.SBRF.Field.Missing
+      - RU.SBRF.Field.Unexpected
+      - RU.SBRF.Header.Invalid
+      - RU.SBRF.Header.Missing
+      - RU.SBRF.Reauthenticate
+      - RU.SBRF.Resource.InvalidFormat
+      - RU.SBRF.Resource.NotFound
+      - RU.SBRF.Rules.DuplicateReference
+      - RU.SBRF.Signature.Invalid
+      - RU.SBRF.Signature.InvalidClaim
+      - RU.SBRF.Signature.Malformed
+      - RU.SBRF.Signature.Missing
+      - RU.SBRF.Signature.MissingClaim
+      - RU.SBRF.Signature.Unexpected
+      - RU.SBRF.Unsupported.Currency
+      - RU.SBRF.Unsupported.Frequency
+    OBRUError:
+      required:
+      - errorCode
+      - message
+      type: object
+      properties:
+        errorCode:
+          $ref: '#/components/schemas/OBRUErrorResponseErrorCode'
+        message:
+          maxLength: 500
+          type: string
+          description: "Описание ошибки. Например, 'Обязательное поле не указано'."
+        path:
+          maxLength: 500
+          type: string
+          description: "Путь к элементу с ошибкой в JSON объекте. Рекомендуемое, н\
+            о не обязательное поле."
+        url:
+          type: string
+          description: "URL для помощи в устранении проблемы, Также через URL можн\
+            о предоставлять дополнительную информацию."
+          format: uri
+      additionalProperties: false
+      description: Контейнер с ошибкой
+    OBRUErrorResponse:
+      required:
+      - Errors
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: "Высокоуровневый текстовый код ошибки, необходимый для клас\
+            сификации"
+        id:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: "Уникальный идентификатор ошибки, для целей аудита, в случа\
+            е неизвестных / не классифицированных ошибок."
+        message:
+          maxLength: 500
+          minLength: 1
+          description: "Краткое сообщение об ошибке. Например, «что-то не так с пр\
+            едоставленными параметрами запроса»."
+        Errors:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/OBRUError'
+      additionalProperties: false
+      description: Контейнер с детализацией ошибки
+    PostalAddress:
+      type: object
+      properties:
+        addressType:
+          $ref: '#/components/schemas/AddressTypeCode'
+        addressLine:
+          maxItems: 2
+          minItems: 0
+          type: array
+          description: Строка адреса
+          items:
+            maxLength: 70
+            type: string
+        streetName:
+          maxLength: 70
+          type: string
+          description: Наименование улицы или проспекта
+          example: Садовая
+        buildingNumber:
+          maxLength: 16
+          type: string
+          description: "Номер, который определяет положение здания на улице"
+          example: "11"
+        postCode:
+          maxLength: 16
+          type: string
+          description: Почтовый индекс
+          example: "0100010"
+        townName:
+          maxLength: 35
+          type: string
+          description: "Наименование населённого пункта или территории, находящейс\
+            я вне границ поселений"
+          example: Бигсити
+        countrySubDivision:
+          maxLength: 35
+          type: string
+          description: Наименование и тип субъекта Российской Федерации
+          example: Мой край
+        country:
+          $ref: '#/components/schemas/CountryCode'
+      additionalProperties: false
+      description: Почтовый адрес
+      example:
+        country: RU
+        streetName: Садовая
+        townName: Бигсити
+        countrySubDivision: Мой край
+        addressType: DeliveryTo
+        buildingNumber: "11"
+        postCode: "0100010"
+        addressLine:
+        - addressLine
+        - addressLine
+    AddressTypeCode:
+      type: string
+      description: Тип адреса
+      example: DeliveryTo
+      enum:
+      - Business | Рабочий адрес
+      - Correspondence | Адрес для корреспонденции
+      - DeliveryTo | Адрес доставки
+      - MailTo | Почтовый ящик
+      - POBox | Абонентский ящик
+      - Postal | Почтовый адрес
+      - Residential | Адрес проживания
+      - Statement | Адрес пребывания
+    ISODateTime:
+      type: string
+      description: Формат даты и времени
+      format: date-time
+      example: 2021-06-05T15:15:13Z
+    ActiveOrHistoricCurrencyCode:
+      pattern: "^[A-Z]{3,3}"
+      type: string
+      description: "Код валюты, соответствующий международного стандарта ISO 4217"
+      example: RUB
+    Insurances:
+      type: object
+      properties:
+        Insurance:
+          type: array
+          description: Описание бизнес-правил заполнения информации о страховых программах
+            для оформления кредита
+          items:
+            $ref: '#/components/schemas/Insurance'
+      description: Список страховых программах
+    Insurance:
+      required:
+      - companyName
+      - insuranceName
+      type: object
+      properties:
+        insuranceId:
+          type: string
+          description: Идентификатор страховой программы
+          example: INS-01
+        insuranceName:
+          type: string
+          description: Наименование страховой программы
+          example: Страхование жизни и здоровья
+        comments:
+          $ref: '#/components/schemas/Comments'
+        companyName:
+          type: string
+          description: "Название компании, предоставляющей услуги по страхованию"
+          example: МоеСтрахование
+        amountRate:
+          $ref: '#/components/schemas/Rate'
+        agreementURL:
+          type: string
+          description: Ссылка на информацию с условиями страховой программы
+          example: https://insurance.myprovider.ru/life
+        riskComments:
+          $ref: '#/components/schemas/Comments'
+      description: Описание бизнес-правил заполнения информации о страховой программе
+        для оформления продукта
+    PaymentDate:
+      type: object
+      properties:
+        customerChoice:
+          type: boolean
+          description: |-
+            Возможность выбрать дату платежа | FALSE – дата платежа назначается организацией;
+             TRUE – дату платежа выбирает клиент
+        comments:
+          $ref: '#/components/schemas/Comments'
+      description: Информация о возможности выбора клиентом даты платежа
+    Comments:
+      type: array
+      description: Комментарии и описания основных сведений о разделе
+      items:
+        maxLength: 255
+        type: string
+        example: Информация для клиента
+    ProductsResponse_Data:
+      type: object
+      properties:
+        Product:
+          $ref: '#/components/schemas/Product'
+      description: Раздел данных для информации о банковском продукте
+      example: null
+    ProductListResponse_Data:
+      type: object
+      properties:
+        Products:
+          type: array
+          description: "Информация о продуктах, которые доступны для предложений"
+          items:
+            $ref: '#/components/schemas/ProductList'
+      description: Раздел данных для информации о банковском продукте
+      example: null
+  responses:
+    "200GetBanks":
+      description: Запрос успешно выполнен
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BankResponse'
+    "200GetDevices":
+      description: Запрос успешно выполнен
+      headers:
+        Etag:
+          description: "Уникальный идентификатор, котрый определяет, изменился ли\
+            \ ресурс"
+          style: simple
+          explode: false
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeviceResponse'
+    "200GetBranches":
+      description: Запрос успешно выполнен
+      headers:
+        Etag:
+          description: "Уникальный идентификатор, котрый определяет, изменился ли\
+            \ ресурс"
+          style: simple
+          explode: false
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BranchesResponse'
+    "200ProductsRead":
+      description: Запрос успешно выполнен
+      headers:
+        Etag:
+          description: "Уникальный идентификатор, котрый определяет, изменился ли\
+            \ ресурс"
+          style: simple
+          explode: false
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductsResponse'
+    "200ProductListRead":
+      description: Запрос успешно выполнен
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductListResponse'
+    "400Error":
+      description: "Запрос имеет не верный формат, отсутствующие или несовместимые\
+        \ тело JSON, параметры URL или поля заголовка"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OBRUErrorResponse'
+    "404Error":
+      description: "1.\tСППД пытается получить ресурс, который указан в спецификац\
+        ии, но не реализован на стороне ППД. 2.\tСППД пытается получить ресурс, ко\
+        торый не определен"
+    "500Error":
+      description: Что-то пошло не так на стороне Стороннего поставщика.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OBRUErrorResponse'
+  parameters:
+    x-fapi-auth-date:
+      name: x-fapi-auth-date
+      in: header
+      description: "Время последнего входа Пользователя в систему с TPP. Значение\
+        \ предоставляется в виде HTTP-date, как в разделе 7.1.1.1 [RFC7231]. Напри\
+        мер, x-fapi-auth-date: Mon, 26 Aug 2019 12:23:11 GMT"
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+    x-fapi-customer-ip-address:
+      name: x-fapi-customer-ip-address
+      in: header
+      description: "IP-адрес Пользователя, если Пользователь в данный момент подкл\
+        ючен к Стороннему Поставщику (залогинен в приложении Стороннего Поставщика\
+        )."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+    Authorization:
+      name: Authorization
+      in: header
+      description: Токен авторизации согласно https://tools.ietf.org/html/rfc6750
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    x-customer-user-agent:
+      name: x-customer-user-agent
+      in: header
+      description: "В заголовке указывается тип устройства (user-agent), который и\
+        спользует Пользователь. Сторонний Поставщик может заполнить это поле значе\
+        нием типа устройства (user-agent), указанным Пользователем. Если Пользоват\
+        ель использует мобильное приложение Стороннего Поставщика, Сторонний Поста\
+        вщик проверяет, что строка типа устройства (user-agent) отличается от стро\
+        ки типа устройства (user-agent) на основе браузера"
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: ""
+    product-type:
+      name: product-type
+      in: query
+      description: Фильтрации по типу продукта
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: '#/components/schemas/ProductType'
+    If-Modified-Since:
+      name: x-If-Modified-Since
+      in: header
+      description: "Фильтрации по времени модификации. Возвращает только те ресурс\
+        ы, которые были изменены с указанного времени обращения"
+      required: false
+      style: simple
+      explode: false
+      schema:
+        $ref: '#/components/schemas/ISODateTime'
+    If-None-Match:
+      name: If-Modified-Since
+      in: header
+      description: Фильтрации по идентификатору данных. Возвращает ресурс только в
+        случае если представленное значение Etag не совпадает с текущим
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+    productId:
+      name: productId
+      in: path
+      description: "Уникальный идентификатор, присвоенный финансовым  учреждением\
+        \ внутри компании каждому из банковских  продуктов"
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 40
+        minLength: 1
+        type: string
+        example: 022eaab4-568b-4635-a5fb-fe91153e6cd6
+    page:
+      name: page
+      in: query
+      description: Номер страницы
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+        default: 0
