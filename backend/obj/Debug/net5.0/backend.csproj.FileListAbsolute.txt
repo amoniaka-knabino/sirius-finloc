@@ -56,3 +56,8 @@ C:\Users\student.CORP\Desktop\sirius-finloc\backend\obj\Debug\net5.0\refint\back
 C:\Users\student.CORP\Desktop\sirius-finloc\backend\obj\Debug\net5.0\backend.pdb
 C:\Users\student.CORP\Desktop\sirius-finloc\backend\obj\Debug\net5.0\backend.genruntimeconfig.cache
 C:\Users\student.CORP\Desktop\sirius-finloc\backend\obj\Debug\net5.0\ref\backend.dll
+C:\Users\warkosanta\Desktop\sirius-finloc\backend\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\warkosanta\Desktop\sirius-finloc\backend\bin\Debug\net5.0\Aqua.dll
+C:\Users\warkosanta\Desktop\sirius-finloc\backend\bin\Debug\net5.0\Aqua.Newtonsoft.Json.dll
+C:\Users\warkosanta\Desktop\sirius-finloc\backend\bin\Debug\net5.0\Remote.Linq.dll
+C:\Users\warkosanta\Desktop\sirius-finloc\backend\bin\Debug\net5.0\Remote.Linq.Newtonsoft.Json.dll
