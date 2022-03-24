@@ -21,7 +21,7 @@ namespace backend.Controllers
 
         [HttpGet]
         public async Task<ActionResult<Response>> Get([FromQuery] Filter filter)
-        { 
+        {
             try
             {
                 var response = new Response();
@@ -37,6 +37,24 @@ namespace backend.Controllers
                 response.Devices = devices.Where(d =>
                     d.Availability.access24Hours == filter.access24Hourse);
 
+                if (filter.Accessibilities != null
+                    && filter.Accessibilities.Any())
+                {
+                    response.Branches = response.Branches.Where(b =>
+                      filter.Accessibilities.All(a => b.Accessibilities.Accessibility
+                        .Select(ac => ac.type).Contains(a.ToDescription())));
+
+                    response.Devices = response.Devices.Where(d =>
+                       filter.Accessibilities.All(a => d.Accessibilities.Accessibility
+                        .Select(ac => ac.type).Contains(a.ToDescription())));
+                }
+
+                if (filter.Cards != null
+                    && filter.Cards.Any())
+                {
+                    response.Devices = response.Devices.Where(d =>
+                       filter.Cards.All(c => d.cards.Contains(c.ToDescription())));
+                }
 
                 return Ok(response);
             }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using backend.Services;
 using Microsoft.AspNetCore.Builder;
@@ -28,11 +29,16 @@ namespace backend
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+                 .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters
+                    .Add(new JsonStringEnumConverter()));
+
             services.AddSwaggerGen(c =>
             {
                 c.CustomSchemaIds(x => x.FullName);
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Map App Backend", Version = "v1" });
+                c.DescribeAllEnumsAsStrings();
             });
 
             var url = Configuration.GetSection("URL").Value.ToString();

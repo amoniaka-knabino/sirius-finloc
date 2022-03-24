@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
+using static backend.Models.Shared;
 
 namespace backend.Model.Devices
 {
@@ -154,18 +155,6 @@ namespace backend.Model.Devices
         public string mobileNumber { get; set; }
         public List<SocialNetwork> SocialNetworks { get; set; }
     }
-
-    public class Accessibility
-    {
-        public string description { get; set; }
-        public string type { get; set; }
-    }
-
-    public class Accessibilities
-    {
-        public List<Accessibility> Accessibility { get; set; }
-    }
-
     public class Device
     {
         public string deviceType { get; set; }

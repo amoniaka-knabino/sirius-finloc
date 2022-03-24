@@ -22,5 +22,11 @@ namespace backend.Services
             var content = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Root>(content)?.Data.Branch;
         }
+
+        public IEnumerable<Branch> GetFiltredBranches(IEnumerable<Branch> branches, Filter filter)
+        {
+            // to do
+            return default;
+        }
     }
 }
