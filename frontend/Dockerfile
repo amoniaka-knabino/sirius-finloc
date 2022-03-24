@@ -19,4 +19,4 @@ COPY --from=builder /app/build ./build
 RUN npm -g install serve
 EXPOSE 5050
 
-CMD ["serve", "-s", "build", "-p", "2010"]
+CMD ["serve", "-s", "build", "-p", "5050"]

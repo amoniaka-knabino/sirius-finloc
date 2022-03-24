@@ -6,3 +6,5 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     restart: always
+    ports:
+      - "2010:5050"
