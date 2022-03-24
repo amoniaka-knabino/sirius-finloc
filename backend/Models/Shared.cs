@@ -7,6 +7,15 @@ namespace backend.Models
 {
     public class Shared
     {
-        //to do
+        public class Accessibility
+        {
+            public string description { get; set; }
+            public string type { get; set; }
+        }
+
+        public class Accessibilities
+        {
+            public List<Accessibility> Accessibility { get; set; }
+        }
     }
 }

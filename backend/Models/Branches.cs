@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static backend.Models.Shared;
 
 namespace backend.Models.Branches
 {
@@ -145,17 +146,6 @@ namespace backend.Models.Branches
         public Availability Availability { get; set; }
         public List<ContactDetail> ContactDetails { get; set; }
         public object segment { get; set; }
-    }
-
-    public class Accessibility
-    {
-        public string description { get; set; }
-        public string type { get; set; }
-    }
-
-    public class Accessibilities
-    {
-        public List<Accessibility> Accessibility { get; set; }
     }
 
     public class Branch
