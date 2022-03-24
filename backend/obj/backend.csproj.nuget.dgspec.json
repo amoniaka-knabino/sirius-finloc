@@ -1,32 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\warkosanta\\Desktop\\sirius-finloc\\backend\\backend.csproj": {}
+    "C:\\Users\\student.CORP\\Desktop\\sirius-finloc\\backend\\backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\warkosanta\\Desktop\\sirius-finloc\\backend\\backend.csproj": {
+    "C:\\Users\\student.CORP\\Desktop\\sirius-finloc\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\warkosanta\\Desktop\\sirius-finloc\\backend\\backend.csproj",
+        "projectUniqueName": "C:\\Users\\student.CORP\\Desktop\\sirius-finloc\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\Users\\warkosanta\\Desktop\\sirius-finloc\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\warkosanta\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\warkosanta\\Desktop\\sirius-finloc\\backend\\obj\\",
+        "projectPath": "C:\\Users\\student.CORP\\Desktop\\sirius-finloc\\backend\\backend.csproj",
+        "packagesPath": "C:\\Users\\student.CORP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\student.CORP\\Desktop\\sirius-finloc\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\warkosanta\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\student.CORP\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
-            "targetAlias": "net5.0",
+          "net6.0": {
+            "targetAlias": "net6.0",
             "projectReferences": {}
           }
         },
@@ -37,12 +35,12 @@
         }
       },
       "frameworks": {
-        "net5.0": {
-          "targetAlias": "net5.0",
+        "net6.0": {
+          "targetAlias": "net6.0",
           "dependencies": {
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[5.6.3, )"
+              "version": "[6.0.3, )"
             }
           },
           "imports": [
@@ -63,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }
