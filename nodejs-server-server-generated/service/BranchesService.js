@@ -151,13 +151,7 @@ exports.getBranches = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMo
           } ]
         },
         "Accessibilities" : {
-          "Accessibility" : [ {
-            "description" : "description",
-            "type" : "Braille | Шрифт Брайля"
-          }, {
-            "description" : "description",
-            "type" : "Braille | Шрифт Брайля"
-          } ]
+          "Accessibility" : [  ]
         }
       }, {
       "branchId" : "branchId",
@@ -287,7 +281,13 @@ exports.getBranches = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMo
           "type" : "Braille | Шрифт Брайля"
         }, {
           "description" : "description",
-          "type" : "Braille | Шрифт Брайля"
+          "type" : "InternalRamp | Внутренний пандус"
+        }, {
+          "description" : "description",
+          "type" : "ExternalRamp | Внешний пандус"
+        }, {
+          "description" : "description",
+          "type" : "WheelchairAccess | Доступность для инвалидных колясок"
         } ]
       }
     }, {

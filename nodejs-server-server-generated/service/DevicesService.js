@@ -68,7 +68,16 @@ exports.getDevices = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMod
           "paymentAgentIndicator" : "БПА | банкомат (касса) банковского платежного агента, привлеченного кредитной организацией;"
         },
         "qr" : true,
-        "cards" : [ "AmericanExpress | Международная платежная система", "AmericanExpress | Международная платежная система" ],
+        "cards" : [ 
+          "AmericanExpress | Международная платежная система",
+          "Discover | Международная платежная система",
+          "Diners | Международная платежная система",
+          "MasterCard | Международная платежная система",
+          "VISA | Международная платежная система",
+          "MIR | Российская национальная платежная система",
+          "JCB | Платежная система Японии",
+          "UnionPay | Национальная платежная система Китая" 
+        ],
         "Address" : {
           "PostalAddressAndAdmZone" : {
             "PostalAddress" : {
@@ -194,7 +203,7 @@ exports.getDevices = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMod
         "paymentAgentIndicator" : "БПА | банкомат (касса) банковского платежного агента, привлеченного кредитной организацией;"
       },
       "qr" : true,
-      "cards" : [ "AmericanExpress | Международная платежная система", "AmericanExpress | Международная платежная система" ],
+      "cards" : [ "MIR | Российская национальная платежная система" ],
       "Address" : {
         "PostalAddressAndAdmZone" : {
           "PostalAddress" : {
@@ -219,7 +228,7 @@ exports.getDevices = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMod
       },
       "currentStatus" : "On | Доступно",
       "description" : "description",
-      "nfc" : true,
+      "nfc" : false,
       "recirculation" : true,
       "CurrencyExchange" : [ {
         "amountMax" : 1.4658129,
@@ -306,7 +315,7 @@ exports.getDevices = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMod
           "Day" : [ null, null ]
         } ],
         "isRestricted" : true,
-        "access24Hours" : true
+        "access24Hours" : false
       },
       "PaymentAgent" : {
         "name" : "Смирнофф",
@@ -320,7 +329,13 @@ exports.getDevices = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMod
         "paymentAgentIndicator" : "БПА | банкомат (касса) банковского платежного агента, привлеченного кредитной организацией;"
       },
       "qr" : true,
-      "cards" : [ "AmericanExpress | Международная платежная система", "AmericanExpress | Международная платежная система" ],
+      "cards" : [ 
+        "AmericanExpress | Международная платежная система",
+        "VISA | Международная платежная система",
+        "MIR | Российская национальная платежная система",
+        "MasterCard | Международная платежная система",
+        "UnionPay | Национальная платежная система Китая"
+      ],
       "Address" : {
         "PostalAddressAndAdmZone" : {
           "PostalAddress" : {
@@ -403,7 +418,11 @@ exports.getDevices = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMod
           "type" : "Braille | Шрифт Брайля"
         }, {
           "description" : "description",
-          "type" : "Braille | Шрифт Брайля"
+          "type" : "AudioCashMachine | Голосовое озвучивание"
+        },
+        {
+          "description" : "description",
+          "type" : "AutomaticDoors | Автоматические двери"
         } ]
       }
     } ]
