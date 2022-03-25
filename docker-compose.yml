@@ -17,5 +17,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    restart: always
     ports:
-      - "2012:5000"
+      - 2012:5000
