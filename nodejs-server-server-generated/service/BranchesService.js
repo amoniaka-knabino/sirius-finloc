@@ -27,7 +27,133 @@ exports.getBranches = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMo
     "first" : "http://example.com/aeiou"
   },
   "Data" : {
-    "Branch" : [ {
+    "Branch" : [ 
+      {
+        "branchId" : "branchId",
+        "Services" : {
+          "Service" : [ {
+            "dateTime" : "2021-06-05T15:15:13Z",
+            "currentStatus" : "Active | Доступно",
+            "segment" : "segment",
+            "name" : "name",
+            "description" : "description",
+            "serviceId" : "serviceId",
+            "type" : "Loan | Кредит",
+            "url" : "url"
+          }, {
+            "dateTime" : "2021-06-05T15:15:13Z",
+            "currentStatus" : "Active | Доступно",
+            "segment" : "segment",
+            "name" : "name",
+            "description" : "description",
+            "serviceId" : "serviceId",
+            "type" : "Loan | Кредит",
+            "url" : "url"
+          } ],
+          "CurrencyExchange" : [ {
+            "amountMax" : 1.4658129,
+            "scaleCurrency" : 1,
+            "exchangeRate" : 1,
+            "amountMin" : 6.0274563,
+            "fee" : 0.8008282,
+            "exchangeType" : "Online | Онлайн",
+            "direction" : "Sell | Кредитная организация продает валюту"
+          }, {
+            "amountMax" : 1.4658129,
+            "scaleCurrency" : 1,
+            "exchangeRate" : 1,
+            "amountMin" : 6.0274563,
+            "fee" : 0.8008282,
+            "exchangeType" : "Online | Онлайн",
+            "direction" : "Sell | Кредитная организация продает валюту"
+          } ]
+        },
+        "wifi" : true,
+        "equeue" : true,
+        "Address" : {
+          "PostalAddressAndAdmZone" : {
+            "PostalAddress" : {
+              "country" : "RU",
+              "streetName" : "Садовая",
+              "townName" : "Бигсити",
+              "countrySubDivision" : "Мой край",
+              "addressType" : "DeliveryTo",
+              "buildingNumber" : "11",
+              "postCode" : "0100010",
+              "addressLine" : [ "addressLine", "addressLine" ]
+            },
+            "administrationZone" : "45388000"
+          },
+          "Geolocation" : {
+            "GeographicCoordinates" : {
+              "latitude" : 43.427948, 
+              "longitude" : 39.922915
+            }
+          },
+          "fias" : "fias"
+        },
+        "name" : "АдлерБанк",
+        "Information" : {
+          "Availability" : {
+            "StandardAvailability" : {
+              "Day" : [ {
+                "dayCode" : "01 | Понедельник",
+                "openingTime" : "2021-06-05T15:15:13Z",
+                "BreakTime" : [ { }, { } ]
+              }, {
+                "dayCode" : "01 | Понедельник",
+                "openingTime" : "2021-06-05T15:15:13Z",
+                "BreakTime" : [ { }, { } ]
+              } ]
+            },
+            "sameAsOrganization" : true,
+            "description" : "description",
+            "NonStandardAvailability" : [ {
+              "name" : "name",
+              "description" : "description",
+              "Day" : [ null, null ]
+            }, {
+              "name" : "name",
+              "description" : "description",
+              "Day" : [ null, null ]
+            } ],
+            "isRestricted" : true,
+            "access24Hours" : true
+          },
+          "ContactDetails" : [ {
+            "emailAddress" : "emailAddress",
+            "other" : "other",
+            "phoneNumber" : "phoneNumber",
+            "mobileNumber" : "mobileNumber",
+            "SocialNetworks" : [ {
+              "networkName" : "VK | ВКонтакте",
+              "description" : "description",
+              "url" : "url"
+            }, {
+              "networkName" : "VK | ВКонтакте",
+              "description" : "description",
+              "url" : "url"
+            } ]
+          }, {
+            "emailAddress" : "emailAddress",
+            "other" : "other",
+            "phoneNumber" : "phoneNumber",
+            "mobileNumber" : "mobileNumber",
+            "SocialNetworks" : [ {
+              "networkName" : "VK | ВКонтакте",
+              "description" : "description",
+              "url" : "url"
+            }, {
+              "networkName" : "VK | ВКонтакте",
+              "description" : "description",
+              "url" : "url"
+            } ]
+          } ]
+        },
+        "Accessibilities" : {
+          "Accessibility" : [  ]
+        }
+      }, {
       "branchId" : "branchId",
       "Services" : {
         "Service" : [ {
@@ -85,13 +211,13 @@ exports.getBranches = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMo
         },
         "Geolocation" : {
           "GeographicCoordinates" : {
-            "latitude" : 5.962134,
-            "longitude" : 5.637377
+            "latitude" : 43.415798, 
+            "longitude" : 39.948840
           }
         },
         "fias" : "fias"
       },
-      "name" : "name",
+      "name" : "СириусБанк",
       "Information" : {
         "Availability" : {
           "StandardAvailability" : {
@@ -155,7 +281,13 @@ exports.getBranches = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMo
           "type" : "Braille | Шрифт Брайля"
         }, {
           "description" : "description",
-          "type" : "Braille | Шрифт Брайля"
+          "type" : "InternalRamp | Внутренний пандус"
+        }, {
+          "description" : "description",
+          "type" : "ExternalRamp | Внешний пандус"
+        }, {
+          "description" : "description",
+          "type" : "WheelchairAccess | Доступность для инвалидных колясок"
         } ]
       }
     }, {
@@ -216,13 +348,13 @@ exports.getBranches = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMo
         },
         "Geolocation" : {
           "GeographicCoordinates" : {
-            "latitude" : 5.962134,
-            "longitude" : 5.637377
+            "latitude" : 43.405348,
+            "longitude" : 39.943926
           }
         },
         "fias" : "fias"
       },
-      "name" : "name",
+      "name" : "СочиЧилл",
       "Information" : {
         "Availability" : {
           "StandardAvailability" : {

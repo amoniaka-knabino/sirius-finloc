@@ -4,7 +4,19 @@ services:
   frontend:
     build: 
       context: ./frontend
-      dockerfile: Dockerfile
     restart: always
     ports:
       - "2010:5050"
+  nodejs_generated:
+    build: 
+      context: ./nodejs-server-server-generated
+    restart: always
+    ports:
+      - "2011:8080"
+  dotnet:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 2012:5000
