@@ -21,3 +21,8 @@ code {
   padding: 10px;
  
 }
+
+.ant-checkbox-group-item {
+  display: block;
+  margin-right: 0;
+}

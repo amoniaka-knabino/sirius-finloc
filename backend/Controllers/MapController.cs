@@ -9,7 +9,6 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [EnableCors("*")] 
     public class MapController : ControllerBase
     {
         private BranchesService _branchService;
