@@ -57,7 +57,7 @@ exports.getDevices = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMod
           "access24Hours" : true
         },
         "PaymentAgent" : {
-          "name" : "СириусБанкомат",
+          "name" : "OlympicInternational",
           "Identification" : [ {
             "identification" : "7728240240",
             "schemeName" : "RU.CBR.TXID | Идентификационный номер налогоплательщика (ИНН)"
@@ -85,8 +85,8 @@ exports.getDevices = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMod
           },
           "Geolocation" : {
             "GeographicCoordinates" : {
-              "latitude" : 43.414761,
-              "longitude" : 39.949039
+              "latitude" : 43.409228, 
+              "longitude" : 39.951437
             }
           },
           "fias" : "fias"
