@@ -8,3 +8,10 @@ services:
     restart: always
     ports:
       - "2010:5050"
+  nodejs_generated:
+    build: 
+      context: ./nodejs-server-server-generated
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "2011:8080"
