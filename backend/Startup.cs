@@ -95,7 +95,7 @@ namespace backend
                             "backend v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
