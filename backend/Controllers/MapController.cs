@@ -20,8 +20,8 @@ namespace backend.Controllers
             _deviceService = deviceService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<Response>> Get([FromQuery] Filter filter)
+        [HttpPost]
+        public async Task<ActionResult<Response>> Post([FromBody] Filter filter)
         {
             try
             {
