@@ -1,12 +1,11 @@
 import './App.css';
+import Main from './pages/Main';
 import Map from './pages/Map';
 
 function App() {
   return (
     <div className="App">
-       <div className="map-container">
-            <Map />
-        </div>
+       <Main/>
     </div>
   );
 }

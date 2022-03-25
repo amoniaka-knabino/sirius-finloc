@@ -16,3 +16,8 @@
 .App-link {
   color: #61dafb;
 }
+
+.ant-checkbox-group-item {
+  display: block;
+  margin-right: 0;
+}

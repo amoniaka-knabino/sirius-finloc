@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
