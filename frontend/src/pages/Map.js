@@ -13,13 +13,32 @@ const mapData = {
 
 const coordinates = [[43.414707, 39.949854]]
 
-const Map = () => {
+const Map = (props) => {
+  var dots = props.data.branches.map((b) => {
+    console.log(b.address)
+  })
+
   return (
-    <div className='map-container'>
+    <div className="map-container">
       <YMaps>
         <YMap defaultState={mapData} width="auto" height="700px">
-          {coordinates.map((coordinate) => (
-            <Placemark geometry={coordinate} />
+          {props.data.branches.map((b) => {
+            const geo = [];
+            geo.push(b.address.geolocation.geographicCoordinates.latitude);
+            geo.push(b.address.geolocation.geographicCoordinates.longitude)
+            return (
+              <Placemark
+                geometry={geo}
+              />
+            )
+          })}
+          {props.data.devices.map((d) => (
+            <Placemark
+              geometry={[
+                d.address.geolocation.geographicCoordinates.latitude,
+                d.address.geolocation.geographicCoordinates.longitude,
+              ]}
+            />
           ))}
         </YMap>
       </YMaps>

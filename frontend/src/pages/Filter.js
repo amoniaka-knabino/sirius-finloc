@@ -4,6 +4,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { Checkbox, Divider } from 'antd'
 import { List, Typography } from 'antd'
+import { branchesData, devicesData } from './data'
 
 const CheckboxGroup = Checkbox.Group
 
@@ -31,16 +32,17 @@ const instance = axios.create({
   },
 })
 
-const Filter = () => {
+const Filter = (props) => {
   const [wifi, setWifi] = useState(true)
   const [qr, setQr] = useState(true)
   const [access24Hourse, setAccess24Hourse] = useState(true)
   const [equeue, setEqueue] = useState(true)
+  const [nfc, setNfc] = useState(true)
 
   const [checkedList, setCheckedList] = useState(defaultCheckedList)
   const [indeterminate, setIndeterminate] = useState(true)
   const [checkAll, setCheckAll] = useState(false)
-  const [data, setData] = useState({ devices: [], branches: [] })
+  //const [data, setData] = useState({ devices: [], branches: [] })
 
   const onChange = (list) => {
     setCheckedList(list)
@@ -53,11 +55,19 @@ const Filter = () => {
     setCheckAll(e.target.checked)
   }
   const onButtonClick = () => {
-    var res = axios.get('http://finloc.somnoynadno.ru/map', {
-      params: { wifi: wifi },
-    })
-    console.log(res)
-  }
+    axios
+      .get('http://finloc.somnoynadno.ru/map', {
+        params: {
+          wifi: wifi,
+          qr: qr,
+          equeue: equeue,
+          nfc: nfc,
+          access24Hourse: access24Hourse,
+        },
+      })
+      .then((result) => props.setData(result.data))
+      .catch(() => props.setData({ devices: devicesData, branches: branchesData }))
+    }
   return (
     <div className="filter-container">
       <Tabs
@@ -84,7 +94,7 @@ const Filter = () => {
                 <Switch checked={wifi} onChange={() => setWifi(!wifi)}></Switch>
               </List.Item>
               <List.Item>
-                <Typography.Text>QR</Typography.Text>
+                <Typography.Text>Оплата по QR коду</Typography.Text>
                 <Switch checked={qr} onChange={() => setQr(!qr)}></Switch>
               </List.Item>
               <List.Item>
@@ -100,6 +110,10 @@ const Filter = () => {
                   checked={access24Hourse}
                   onChange={() => setAccess24Hourse(!access24Hourse)}
                 ></Switch>
+              </List.Item>
+              <List.Item>
+                <Typography.Text>NFC</Typography.Text>
+                <Switch checked={nfc} onChange={() => setNfc(!nfc)}></Switch>
               </List.Item>
             </List>
           </div>
