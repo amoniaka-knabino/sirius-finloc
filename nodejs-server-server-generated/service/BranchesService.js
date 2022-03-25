@@ -85,13 +85,13 @@ exports.getBranches = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMo
         },
         "Geolocation" : {
           "GeographicCoordinates" : {
-            "latitude" : 5.962134,
-            "longitude" : 5.637377
+            "latitude" : 43.415798, 
+            "longitude" : 39.948840
           }
         },
         "fias" : "fias"
       },
-      "name" : "name",
+      "name" : "СириусБанк",
       "Information" : {
         "Availability" : {
           "StandardAvailability" : {
@@ -216,13 +216,13 @@ exports.getBranches = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMo
         },
         "Geolocation" : {
           "GeographicCoordinates" : {
-            "latitude" : 5.962134,
-            "longitude" : 5.637377
+            "latitude" : 43.405348,
+            "longitude" : 39.943926
           }
         },
         "fias" : "fias"
       },
-      "name" : "name",
+      "name" : "СочиЧилл",
       "Information" : {
         "Availability" : {
           "StandardAvailability" : {

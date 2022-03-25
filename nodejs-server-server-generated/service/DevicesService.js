@@ -57,7 +57,7 @@ exports.getDevices = function(page,xFapiCustomerIpAddress,xIfModifiedSince,ifMod
           "access24Hours" : true
         },
         "PaymentAgent" : {
-          "name" : "СириусБанк",
+          "name" : "СириусБанкомат",
           "Identification" : [ {
             "identification" : "7728240240",
             "schemeName" : "RU.CBR.TXID | Идентификационный номер налогоплательщика (ИНН)"
