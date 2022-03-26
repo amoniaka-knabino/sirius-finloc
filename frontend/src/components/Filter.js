@@ -58,7 +58,7 @@ const Filter = (props) => {
   const onButtonClick = () => {
     setLoading(true)
     axios
-      .post('https://localhost:44363/map', {
+      .post('http://somnoynadno.ru:2012/map', {
         wifi: wifi,
         qr: qr,
         equeue: equeue,
@@ -139,8 +139,8 @@ const Filter = (props) => {
         >
           <div className="filter-tab-content">
             <Typography.Text type="secondary">
-              Результаты поиска будут предоставлены в полном соответствии с
-              выбранным параметрам
+              Результаты поиска будут представлены в полном соответствии с
+              выбранными параметрами
             </Typography.Text>
             <br />
             <Checkbox
@@ -171,8 +171,8 @@ const Filter = (props) => {
         >
           <div className="filter-tab-content">
             <Typography.Text type="secondary">
-              Результаты поиска будут предоставлены в частничном соответствии с
-              выбранным параметрам
+              Результаты поиска будут представлены в частничном соответствии с
+              выбранными параметрами
             </Typography.Text>
             <br />
             <Checkbox

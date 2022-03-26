@@ -37,6 +37,7 @@ namespace backend.Controllers
 
                 response.Devices = devices.Where(d =>
                     d.nfc == filter.nfc
+                    && d.qr == filter.qr
                     && d.Availability.access24Hours == filter.access24Hourse);
 
                 if (filter.Accessibilities != null
