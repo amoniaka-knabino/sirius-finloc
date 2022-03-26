@@ -18,11 +18,15 @@ code {
 
 .filter-tab-content{
   text-align: left;
-  padding: 10px;
+  padding: 20px;
  
 }
 
-.ant-checkbox-group-item {
-  display: block;
-  margin-right: 0;
+.ant-checkbox-group {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.tab-title{
+  padding-left: 5px;
 }

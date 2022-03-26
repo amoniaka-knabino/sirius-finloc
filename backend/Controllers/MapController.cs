@@ -36,7 +36,8 @@ namespace backend.Controllers
                     && b.Information.Availability.access24Hours == filter.access24Hourse);
 
                 response.Devices = devices.Where(d =>
-                    d.Availability.access24Hours == filter.access24Hourse);
+                    d.nfc == filter.nfc
+                    && d.Availability.access24Hours == filter.access24Hourse);
 
                 if (filter.Accessibilities != null
                     && filter.Accessibilities.Any())
@@ -54,7 +55,7 @@ namespace backend.Controllers
                     && filter.Cards.Any())
                 {
                     response.Devices = response.Devices.Where(d =>
-                       filter.Cards.All(c => d.cards.Contains(c.ToDescription())));
+                       filter.Cards.Any(c => d.cards.Contains(c.ToDescription())));
                 }
 
                 return Ok(response);
