@@ -23,6 +23,7 @@ const Filter = (props) => {
   const [access24Hourse, setAccess24Hourse] = useState(true)
   const [equeue, setEqueue] = useState(true)
   const [nfc, setNfc] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const [checkedList, setCheckedList] = useState(defaultCheckedList)
   const [indeterminate, setIndeterminate] = useState(true)
@@ -55,6 +56,7 @@ const Filter = (props) => {
     setCheckAllCards(e.target.checked)
   }
   const onButtonClick = () => {
+    setLoading(true)
     axios
       .post('https://localhost:44363/map', {
         wifi: wifi,
@@ -72,13 +74,14 @@ const Filter = (props) => {
       .catch(() =>
         props.setData({ devices: devicesData, branches: branchesData }),
       )
+      .finally(() => setLoading(false))
   }
   return (
     <div className="filter-container">
       <Tabs
         defaultActiveKey="1"
         tabBarExtraContent={
-          <Button type="primary" onClick={onButtonClick}>
+          <Button type="primary" onClick={onButtonClick} loading={loading}>
             Найти
           </Button>
         }

@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using backend.Services;
 
@@ -53,9 +46,11 @@ namespace backend
                     c.CustomSchemaIds(x => x.FullName);
                     c
                         .SwaggerDoc("v1",
-                        new OpenApiInfo {
+                        new OpenApiInfo
+                        {
                             Title = "Map App Backend",
-                            Version = "v1"
+                            Version = "v1",
+                            Description = "Сервис, позволяющий пользователю получить полную, актуальную информацию о ближайших банкоматах и офисах банков",
                         });
                     c.DescribeAllEnumsAsStrings();
                 });
@@ -65,17 +60,6 @@ namespace backend
             services
                 .AddSingleton<BranchesService>(s => new BranchesService(url));
             services.AddSingleton<DevicesService>(s => new DevicesService(url));
-
-            /*services.AddCors(options =>
-            {
-                options.AddPolicy("AllOrigins", builder =>
-                {
-                    builder.WithOrigins("*")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                });
-            });*/
-        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
