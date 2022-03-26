@@ -1,6 +1,6 @@
 import './App.css';
-import Main from './pages/Main';
-import Map from './pages/Map';
+import Main from './components/Main';
+import Map from './components/Map';
 
 function App() {
   return (
