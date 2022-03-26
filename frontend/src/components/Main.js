@@ -9,11 +9,11 @@ const Main = () => {
 
   return <div> 
       <Row>
-      <Col span={16}>
-          <Map data={data}/>
-      </Col>
-      <Col span={8}>
+      <Col xs={24} xl={8}>
           <Filter setData={setData}/>
+      </Col>
+      <Col xs={24} xl={16}>
+          <Map data={data}/>
       </Col>
     </Row>
   </div>

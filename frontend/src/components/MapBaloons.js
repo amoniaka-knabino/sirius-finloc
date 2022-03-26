@@ -48,7 +48,6 @@ export const Baloon = (props) => {
       )}
       {props.data.equeue && <Tag color="orange">Эл.очередь</Tag>}
       {props.data.nfc && <Tag color="cyan">NFC</Tag>}
-      {props.data.nfc && <Tag color="cyan">NFC</Tag>}
       {props.data.cards &&
         props.data.cards.map((card, index) => (
           <Tag key={index} color="lime">

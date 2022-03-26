@@ -17,7 +17,7 @@ const mapData = {
 const getPlacemark = (places) => {
   return places.map((p, index) => (
     <Placemark
-    key={index}
+      key={index}
       geometry={[
         p.address.geolocation.geographicCoordinates.latitude,
         p.address.geolocation.geographicCoordinates.longitude,
@@ -39,7 +39,7 @@ const Map = (props) => {
             'geoObject.addon.hint',
           ]}
           width="auto"
-          height="700px"
+          height="1000px"
         >
           {getPlacemark(props.data.branches)}
           {getPlacemark(props.data.devices)}
