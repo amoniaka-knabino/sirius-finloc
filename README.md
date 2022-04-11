@@ -84,7 +84,6 @@
   <img
   src="README/Screenshot%20from%202022-04-11%2018-10-06.png"
   alt="Frontend">
-  <figcaption><center>Внешний вид приложения</center></figcaption>
 </figure>
 
 ## Команда
