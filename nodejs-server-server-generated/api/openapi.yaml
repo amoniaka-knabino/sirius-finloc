@@ -20,58 +20,6 @@ paths:
         ойствах кредитной организации и банковских платежных агентов (субагентов),\
         \ включающую их характеристики и местоположение (адрес и геолокация)."
       operationId: getDevices
-      parameters:
-      - name: page
-        in: query
-        description: Номер страницы
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: integer
-          default: 0
-      - name: x-fapi-customer-ip-address
-        in: header
-        description: "IP-адрес Пользователя, если Пользователь в данный момент под\
-          ключен к Стороннему Поставщику (залогинен в приложении Стороннего Постав\
-          щика)."
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: x-If-Modified-Since
-        in: header
-        description: "Фильтрации по времени модификации. Возвращает только те ресу\
-          рсы, которые были изменены с указанного времени обращения"
-        required: false
-        style: simple
-        explode: false
-        schema:
-          $ref: '#/components/schemas/ISODateTime'
-      - name: If-Modified-Since
-        in: header
-        description: Фильтрации по идентификатору данных. Возвращает ресурс только
-          в случае если представленное значение Etag не совпадает с текущим
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: x-customer-user-agent
-        in: header
-        description: "В заголовке указывается тип устройства (user-agent), который\
-          \ использует Пользователь. Сторонний Поставщик может заполнить это поле\
-          \ значением типа устройства (user-agent), указанным Пользователем. Если\
-          \ Пользователь использует мобильное приложение Стороннего Поставщика, Ст\
-          оронний Поставщик проверяет, что строка типа устройства (user-agent) отл\
-          ичается от строки типа устройства (user-agent) на основе браузера"
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: ""
       responses:
         "200":
           description: Запрос успешно выполнен
@@ -113,58 +61,6 @@ paths:
       description: "Конечная точка позволяет получить список всех подразделений, п\
         ринадлежащие кредитной организации."
       operationId: getBranches
-      parameters:
-      - name: page
-        in: query
-        description: Номер страницы
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: integer
-          default: 0
-      - name: x-fapi-customer-ip-address
-        in: header
-        description: "IP-адрес Пользователя, если Пользователь в данный момент под\
-          ключен к Стороннему Поставщику (залогинен в приложении Стороннего Постав\
-          щика)."
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: x-If-Modified-Since
-        in: header
-        description: "Фильтрации по времени модификации. Возвращает только те ресу\
-          рсы, которые были изменены с указанного времени обращения"
-        required: false
-        style: simple
-        explode: false
-        schema:
-          $ref: '#/components/schemas/ISODateTime'
-      - name: If-Modified-Since
-        in: header
-        description: Фильтрации по идентификатору данных. Возвращает ресурс только
-          в случае если представленное значение Etag не совпадает с текущим
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: x-customer-user-agent
-        in: header
-        description: "В заголовке указывается тип устройства (user-agent), который\
-          \ использует Пользователь. Сторонний Поставщик может заполнить это поле\
-          \ значением типа устройства (user-agent), указанным Пользователем. Если\
-          \ Пользователь использует мобильное приложение Стороннего Поставщика, Ст\
-          оронний Поставщик проверяет, что строка типа устройства (user-agent) отл\
-          ичается от строки типа устройства (user-agent) на основе браузера"
-        required: false
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: ""
       responses:
         "200":
           description: Запрос успешно выполнен
