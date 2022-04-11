@@ -40,26 +40,18 @@
 
 ## Описание решения
 
-<figure>
-  <img
-  src="README/general%20diagram.png"
-  alt="The beautiful MDN logo.">
-  <figcaption>Общая схема решения</figcaption>
-</figure>
-<br />
+Общая схема решения
+
+![Общая схема решения](README/general%20diagram.png)
 
 1. На основе стандартов Банка России был составлен [документ](maps.yaml) OPEN API спецификации.
 2. Далее, используя документ спецификации, с помощью кодогенерации был создан [сервер](nodejs-server-server-generated/) имитирующий банк. Его REST API интерфейсы передают информацию о банкоматах и офисах.
 3. Далее был разработан собственный [сервер](backend/) (стороннего поставщика данных), который отсылал запросы к банковскому серверу (поставщику данных). У сервера есть свое WEB API уже нерегламентированное стандартами. Кроме того на сервере присутствует бизнес логика фильтрующая банкоматы и офисы по пользовательскому запросу.
 4. [Пользовательское приложение](frontend/) отображает карту и ряд фильтров. Отсылает запросы только стороннему поставщику данных.
 
-<figure>
-  <img
-  src="README/sequence%20diagram.png"
-  alt="The beautiful MDN logo.">
-  <figcaption>Диаграмма последовательности</figcaption>
-</figure>
-<br />
+Диаграмма последовательности
+
+![Диаграмма последовательности](README/sequence%20diagram.png)
 
 ## Внешний вид приложения
 
@@ -67,21 +59,13 @@
 - [Ant Design](https://ant.design/) - библиотека компонентов пользовательского интерфейса React 
 - [React Yandex Maps](https://react-yandex-maps.vercel.app/) - обертка над Yandex.Maps API для React
   
-<figure>
-  <img
-  src="README/Screenshot%20from%202022-04-11%2018-10-06.png"
-  alt="Frontend">
-  <figcaption>Главная и единственная страница приложения</figcaption>
-</figure>
-<br />
+Главная и единственная страница приложения
 
-<figure>
-  <img
-  src="README/front-mobile.png"
-  alt="Frontend">
-  <figcaption>Вид мобильной версии</figcaption>
-</figure>
-<br />
+![Главная и единственная страница приложения](README/front.png )
+
+Вид мобильной версии
+
+![Вид мобильной версии](README/front-mobile.png)
 
 ## Запуск
 
