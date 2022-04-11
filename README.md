@@ -59,6 +59,8 @@
 
 ## Запуск
 
+Запустить можно все вместе командой `docker-compose up --build -d` или запустить каждый компонент по отдельности.
+
 1. Запуск NodeJS сервера
    ```console
     cd nodejs-server-server-generated
@@ -74,6 +76,16 @@
    cd frontend
    npm start
    ```
+
+
+## Внешний вид приложения
+
+<figure>
+  <img
+  src="README/Screenshot%20from%202022-04-11%2018-10-06.png"
+  alt="Frontend">
+  <figcaption><center>Внешний вид приложения</center></figcaption>
+</figure>
 
 ## Команда
 
