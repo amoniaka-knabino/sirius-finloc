@@ -42,8 +42,9 @@
   <img
   src="README/general%20diagram.png"
   alt="The beautiful MDN logo.">
-  <figcaption><center>Общая схема решения</center></figcaption>
+  <figcaption>Общая схема решения</figcaption>
 </figure>
+
 
 1. На основе стандартов Банка России был составлен [документ](maps.yaml) OPEN API спецификации.
 2. Далее, используя документ спецификации, с помощью кодогенерации был создан [сервер](nodejs-server-server-generated/) имитирующий банк. Его REST API интерфейсы передают информацию о банкоматах и офисах.
@@ -54,7 +55,7 @@
   <img
   src="README/sequence%20diagram.png"
   alt="The beautiful MDN logo.">
-  <figcaption><center>Диаграмма последовательности</center></figcaption>
+  <figcaption>Диаграмма последовательности</figcaption>
 </figure>
 
 ## Запуск
@@ -84,7 +85,19 @@
   <img
   src="README/Screenshot%20from%202022-04-11%2018-10-06.png"
   alt="Frontend">
+  <figcaption>Главная и единственная страница приложения</figcaption>
 </figure>
+
+<figure>
+  <img
+  src="README/front-mobile.png"
+  alt="Frontend">
+  <figcaption>Вид мобильной версии</figcaption>
+</figure>
+
+Использовались:
+- [Ant Design](https://ant.design/) - библиотека компонентов пользовательского интерфейса React 
+- [React Yandex Maps](https://react-yandex-maps.vercel.app/) - обертка над Yandex.Maps API для React
 
 ## Команда
 
