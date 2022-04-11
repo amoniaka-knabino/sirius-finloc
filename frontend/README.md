@@ -10,3 +10,5 @@ In the project directory, you can run:
 
 ### `npm start`
 
+# Swagger UI
+![Вид swagger UI для nodejs сервера](../README/node-swagger.png)
