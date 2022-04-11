@@ -46,7 +46,7 @@
   alt="The beautiful MDN logo.">
   <figcaption>Общая схема решения</figcaption>
 </figure>
-
+<br />
 
 1. На основе стандартов Банка России был составлен [документ](maps.yaml) OPEN API спецификации.
 2. Далее, используя документ спецификации, с помощью кодогенерации был создан [сервер](nodejs-server-server-generated/) имитирующий банк. Его REST API интерфейсы передают информацию о банкоматах и офисах.
@@ -59,36 +59,21 @@
   alt="The beautiful MDN logo.">
   <figcaption>Диаграмма последовательности</figcaption>
 </figure>
-
-## Запуск
-
-Запустить можно все вместе командой `docker-compose up --build -d` или запустить каждый компонент по отдельности.
-
-1. Запуск NodeJS сервера
-   ```console
-    cd nodejs-server-server-generated
-    npm start
-   ```
-2. Запуск .NET сервера
-   ```console
-    cd backend
-    dotnet run
-   ```
-3. Запуск React приложения
-   ```console
-   cd frontend
-   npm start
-   ```
-
+<br />
 
 ## Внешний вид приложения
 
+Использовались:
+- [Ant Design](https://ant.design/) - библиотека компонентов пользовательского интерфейса React 
+- [React Yandex Maps](https://react-yandex-maps.vercel.app/) - обертка над Yandex.Maps API для React
+  
 <figure>
   <img
   src="README/Screenshot%20from%202022-04-11%2018-10-06.png"
   alt="Frontend">
   <figcaption>Главная и единственная страница приложения</figcaption>
 </figure>
+<br />
 
 <figure>
   <img
@@ -96,10 +81,30 @@
   alt="Frontend">
   <figcaption>Вид мобильной версии</figcaption>
 </figure>
+<br />
 
-Использовались:
-- [Ant Design](https://ant.design/) - библиотека компонентов пользовательского интерфейса React 
-- [React Yandex Maps](https://react-yandex-maps.vercel.app/) - обертка над Yandex.Maps API для React
+## Запуск
+
+Запустить можно все вместе командой `docker-compose up --build -d` или запустить каждый компонент по отдельности.
+
+1. Запуск NodeJS сервера
+   
+   ```console
+    cd nodejs-server-server-generated
+    npm start
+   ```
+2. Запуск .NET сервера
+   
+   ```console
+    cd backend
+    dotnet run
+   ```
+3. Запуск React приложения
+   
+   ```console
+   cd frontend
+   npm start
+   ```
 
 ## Команда
 
